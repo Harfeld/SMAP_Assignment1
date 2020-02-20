@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 Store dele af setuppet er kraftigt inspirreret af Androids egne guides
@@ -16,7 +17,6 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView wordRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private String[] wordList = {"testWord1", "testWord2", "testWord3", "testWord4", "testWord5","testWord1", "testWord2", "testWord3", "testWord4", "testWord5","testWord1", "testWord2", "testWord3", "testWord4", "testWord5"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,17 @@ public class ListActivity extends AppCompatActivity {
         wordRecyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(wordList);
+        mAdapter = new MyAdapter(testData());
         wordRecyclerView.setAdapter(mAdapter);
+    }
+
+    private List<Word> testData(){
+        List<Word> wordList = new ArrayList<Word>();
+        wordList.add(new Word("lol","lollern","mega lollet"));
+        wordList.add(new Word("grin", "grinern", "mega grinern"));
+        wordList.add(new Word("græd", "grædern", "tudefjæs"));
+        wordList.add(new Word("trip", "trippet", "tripper hårdt"));
+        wordList.add(new Word("nice", "nicern", "mega nice"));
+        return wordList;
     }
 }

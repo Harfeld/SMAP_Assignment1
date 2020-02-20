@@ -14,5 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="16dp"/>
+        android:padding="16dp"
+        tools:listitem="@layout/card_word_item"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
