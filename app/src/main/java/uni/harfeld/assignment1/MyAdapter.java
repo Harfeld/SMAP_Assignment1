@@ -1,6 +1,7 @@
 package uni.harfeld.assignment1;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -26,9 +27,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TextView textView = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
+        TextView textView = (TextView)LayoutInflater.from(parent.getContext()).inflate(R.layout.word_item, parent, false);
 
         MyViewHolder viewHolder = new MyViewHolder(textView);
         return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        holder.textView.setText(data[position]);
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.length;
     }
 }
