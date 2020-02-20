@@ -32,7 +32,7 @@
             android:layout_width="190dp"
             android:layout_height="19dp"
             android:text="Titel"
-            android:textStyle="italic"
+            android:textStyle="bold"
             tools:layout_editor_absoluteX="79dp"
             tools:layout_editor_absoluteY="28dp" />
 
@@ -47,7 +47,7 @@
             android:layout_width="190dp"
             android:layout_height="19dp"
             android:text="pronounciation"
-            android:textStyle="bold"
+            android:textStyle="italic"
             tools:layout_editor_absoluteX="110dp"
             tools:layout_editor_absoluteY="69dp" />
 
@@ -62,18 +62,19 @@
             app:layout_constraintVertical_bias="0.0">
 
             <TextView
-                android:layout_width="40dp"
+                android:id="@+id/word_rating"
+                android:layout_width="44dp"
                 android:layout_height="16dp"
                 android:text="9.9/10"
                 android:textStyle="bold"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/word_rating"
                 app:layout_constraintVertical_bias="0.2" />
 
             <ImageView
-                android:id="@+id/word_rating"
+                android:id="@+id/word_rating_photo"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"

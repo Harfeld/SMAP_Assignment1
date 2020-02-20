@@ -1,7 +1,6 @@
 package uni.harfeld.assignment1;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -11,15 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+/*
+Heavily inspired by:
+https://developer.android.com/guide/topics/ui/layout/recyclerview
+*/
+
+public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCardViewHolder> {
     private List<Word> data;
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class WordCardViewHolder extends RecyclerView.ViewHolder{
         private TextView titelView;
         private TextView pronounciationView;
         private TextView ratingView;
 
-        public MyViewHolder(CardView cardView){
+        public WordCardViewHolder(CardView cardView){
             super(cardView);
             this.titelView = cardView.findViewById(R.id.word_titel);
             this.pronounciationView = cardView.findViewById(R.id.word_pronounciation);
@@ -27,21 +31,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    public MyAdapter(List<Word> data){
+    public WordCardAdapter(List<Word> data){
         this.data = data;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public WordCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.card_word_item, parent, false);
 
-        MyViewHolder viewHolder = new MyViewHolder(cardView);
+        WordCardViewHolder viewHolder = new WordCardViewHolder(cardView);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WordCardViewHolder holder, int position) {
         holder.titelView.setText(data.get(position).getWord());
         holder.pronounciationView.setText(data.get(position).getPronounciation());
         holder.ratingView.setText(String.valueOf(data.get(position).getRating()));
