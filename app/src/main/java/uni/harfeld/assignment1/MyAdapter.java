@@ -24,7 +24,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             this.titelView = cardView.findViewById(R.id.word_titel);
             this.pronounciationView = cardView.findViewById(R.id.word_pronounciation);
             this.ratingView = cardView.findViewById(R.id.word_rating);
-
         }
     }
 
@@ -43,8 +42,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-//        holder.cardView.setText(data[position]);
-        holder.cardView.
+        holder.titelView.setText(data.get(position).getWord());
+        holder.pronounciationView.setText(data.get(position).getPronounciation());
+        holder.ratingView.setText(String.valueOf(data.get(position).getRating()));
     }
 
     @Override
