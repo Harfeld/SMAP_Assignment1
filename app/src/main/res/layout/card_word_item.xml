@@ -63,26 +63,19 @@
 
             <TextView
                 android:id="@+id/word_rating"
-                android:layout_width="44dp"
-                android:layout_height="16dp"
-                android:text="9.9/10"
-                android:textStyle="bold"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:gravity="center"
+                android:text="9.9"
+                android:textSize="36sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintVertical_bias="0.2" />
-
-            <ImageView
-                android:id="@+id/word_rating_photo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.25"
-                tools:srcCompat="@tools:sample/backgrounds/scenic[2]" />
+                app:layout_constraintVertical_bias="0.5" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

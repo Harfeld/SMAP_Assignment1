@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,14 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView wordRecyclerView;
     private RecyclerView.Adapter wordCardAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private Button exitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         wordRecyclerView = findViewById(R.id.word_recycler_view);
+        exitButton = findViewById(R.id.exit_button);
 
         wordRecyclerView.setHasFixedSize(true);
 
@@ -32,6 +36,13 @@ public class ListActivity extends AppCompatActivity {
 
         wordCardAdapter = new WordCardAdapter(testData(15));
         wordRecyclerView.setAdapter(wordCardAdapter);
+
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private List<Word> testData(int amount){
