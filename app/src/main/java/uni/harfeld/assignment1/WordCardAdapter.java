@@ -1,6 +1,7 @@
 package uni.harfeld.assignment1;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -22,12 +23,21 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
         private TextView titelView;
         private TextView pronounciationView;
         private TextView ratingView;
+        private CardView cardViewItem;
 
-        public WordCardViewHolder(CardView cardView){
+        public WordCardViewHolder(CardView cardView) {
             super(cardView);
             this.titelView = cardView.findViewById(R.id.word_titel);
             this.pronounciationView = cardView.findViewById(R.id.word_pronounciation);
             this.ratingView = cardView.findViewById(R.id.word_rating);
+            cardViewItem = cardView.findViewById(cardView.getId());
+
+            cardViewItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ??
+                }
+            });
         }
     }
 
