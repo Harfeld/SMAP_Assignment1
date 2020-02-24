@@ -6,7 +6,7 @@
     <string name="description_txt">Beskrivelse:</string>
     <string name="edit_txt">Rediger</string>
     <string name="notes_txt">Noter:</string>
-    <string name="rating_txt">Vurdering:</string>
+    <string name="rating_txt">Ord Vurdering:</string>
     <string name="words_txt">Mine Ord:</string>
     <string name="exit_txt">Luk</string>
 </resources>
