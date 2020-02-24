@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="384dp"
         android:layout_height="29dp"
-        android:text="My Words:"
+        android:text="@string/words_txt"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/word_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +34,7 @@
 
     <Button
         android:id="@+id/exit_button"
-        android:text="Exit"
+        android:text="@string/exit_txt"
         android:layout_width="64dp"
         android:layout_height="48dp"
         app:layout_constraintBottom_toBottomOf="parent"

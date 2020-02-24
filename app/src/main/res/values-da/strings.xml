@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Opgave1</string>
+    <string name="apply_txt">Godkend</string>
+    <string name="cancel_txt">Fortryd</string>
+    <string name="description_txt">Beskrivelse:</string>
+    <string name="edit_txt">Rediger</string>
+    <string name="notes_txt">Noter:</string>
+    <string name="rating_txt">Vurdering:</string>
+    <string name="words_txt">Mine Ord:</string>
+    <string name="exit_txt">Luk</string>
+</resources>

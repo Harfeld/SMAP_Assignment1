@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Assignment1</string>
-    <string name="description_txt">Description:</string>
-    <string name="notes_txt">Notes:</string>
+    <string name="apply_txt">Apply</string>
     <string name="cancel_txt">Cancel</string>
+    <string name="description_txt">Description:</string>
     <string name="edit_txt">Edit</string>
     <string name="exit_txt">Exit</string>
-    <string name="apply_txt">Apply</string>
+    <string name="notes_txt">Notes:</string>
     <string name="rating_txt">Rating:</string>
     <string name="words_txt">My Words:</string>
 </resources>
