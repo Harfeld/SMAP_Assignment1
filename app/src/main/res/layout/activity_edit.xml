@@ -8,7 +8,7 @@
     tools:context=".EditActivity">
 
     <Button
-        android:id="@+id/details_cancel_button2"
+        android:id="@+id/edit_cancel_button"
         android:layout_width="80dp"
         android:layout_height="48dp"
         android:text="@string/cancel_txt"
@@ -52,7 +52,7 @@
         android:text="9.9"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintBottom_toTopOf="@+id/rating_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
         app:layout_constraintVertical_bias="0.95" />
 
     <TextView
-        android:id="@+id/details_titel"
+        android:id="@+id/edit_titel"
         android:layout_width="166dp"
         android:layout_height="42dp"
         android:gravity="center_horizontal"
@@ -88,7 +88,7 @@
         app:layout_constraintVertical_bias="0.5" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/rating_bar"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
