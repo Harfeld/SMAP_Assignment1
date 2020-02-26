@@ -1,6 +1,8 @@
 package uni.harfeld.assignment1;
 
-public class Word {
+import java.io.Serializable;
+
+public class Word implements Serializable {
     private String word;
     private String pronounciation;
     private String details;

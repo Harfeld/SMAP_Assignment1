@@ -1,5 +1,6 @@
 package uni.harfeld.assignment1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,30 +21,30 @@ https://developer.android.com/guide/topics/ui/layout/recyclerview
 public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCardViewHolder> {
     private List<Word> data;
 
-    public static class WordCardViewHolder extends RecyclerView.ViewHolder{
+    public WordCardAdapter(List<Word> data){
+        this.data = data;
+    }
+
+    public class WordCardViewHolder extends RecyclerView.ViewHolder{
         private TextView titelView;
         private TextView pronounciationView;
-        private TextView ratingView;
-        private CardView cardViewItem;
 
+        private TextView ratingView;
         public WordCardViewHolder(CardView cardView) {
             super(cardView);
             this.titelView = cardView.findViewById(R.id.word_titel);
             this.pronounciationView = cardView.findViewById(R.id.word_pronounciation);
             this.ratingView = cardView.findViewById(R.id.word_rating);
-            cardViewItem = cardView.findViewById(cardView.getId());
 
-            cardViewItem.setOnClickListener(new View.OnClickListener() {
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent detailsIntent = new Intent()
+                public void onClick(View card) {
+                    Intent detailsIntent = new Intent(card.getContext(), DetailsActivity.class);
+                    detailsIntent.putExtra("DATA", data.get(getAdapterPosition()));
+                    ((Activity) card.getContext()).startActivityForResult(detailsIntent, 1);
                 }
             });
         }
-    }
-
-    public WordCardAdapter(List<Word> data){
-        this.data = data;
     }
 
     @NonNull
