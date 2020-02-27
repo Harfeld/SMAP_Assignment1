@@ -3,17 +3,13 @@ package uni.harfeld.assignment1;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-/*
-Heavily inspired by:
-https://www.youtube.com/watch?v=jO0RkS-Ag3A
-*/
 
 public class DetailsActivity extends AppCompatActivity {
     TextView title;
@@ -22,12 +18,10 @@ public class DetailsActivity extends AppCompatActivity {
     TextView note;
     TextView rating;
     ImageView image;
-
     Button cancelButton;
     Button editButton;
-
     Word theWord;
-    Intent entryIntent;
+    Intent initialIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +36,8 @@ public class DetailsActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.details_cancel_button);
         editButton = findViewById(R.id.details_edit_button);
 
-        entryIntent = getIntent();
-        theWord = (Word) entryIntent.getSerializableExtra("DATA");
+        initialIntent = getIntent();
+        theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         pronounce.setText(theWord.getPronounciation());
         description.setText(theWord.getDetails());
@@ -54,8 +48,8 @@ public class DetailsActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent listIntent = new Intent(DetailsActivity.this, ListActivity.class);
-                setResult(RESULT_CANCELED, listIntent);
+                initialIntent.setComponent(new ComponentName(DetailsActivity.this, EditActivity.class));
+                setResult(RESULT_CANCELED, initialIntent);
                 finish();
             }
         });
@@ -63,10 +57,8 @@ public class DetailsActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
-                editIntent.putExtra("DATA", theWord);
-                editIntent.putExtra("INDEX", entryIntent.getIntExtra("INDEX", 0));
-                startActivityForResult(editIntent, 1);
+                initialIntent.setComponent(new ComponentName(DetailsActivity.this, EditActivity.class));
+                startActivityForResult(initialIntent, 1);
             }
         });
     }
@@ -76,11 +68,7 @@ public class DetailsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intentData);
         System.out.println("!!__DETAILS-onActivityResult__!!");
         if (resultCode == RESULT_OK) {
-            Word editedWord = (Word) intentData.getSerializableExtra("DATA");
-            Intent listIntent = new Intent(DetailsActivity.this, ListActivity.class);
-            listIntent.putExtra("DATA", editedWord);
-            listIntent.putExtra("INDEX", intentData.getIntExtra("INDEX", 0));
-            setResult(RESULT_OK, listIntent);
+            setResult(RESULT_OK, intentData);
             finish();
         }
     }

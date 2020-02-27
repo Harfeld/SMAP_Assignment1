@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="4dp"
+    android:background="@color/foreground"
     tools:context=".ListActivity">
 
     <TextView
@@ -35,6 +36,7 @@
         app:layout_constraintVertical_bias="1" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/background"
         android:id="@+id/word_recycler_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"

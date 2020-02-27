@@ -1,5 +1,6 @@
 package uni.harfeld.assignment1;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,7 +13,6 @@ import android.widget.Button;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.Random;
 /*
 Heavily inspired by:
 https://developer.android.com/guide/topics/ui/layout/recyclerview
-https://www.youtube.com/watch?v=jO0RkS-Ag3A
 https://www.youtube.com/watch?v=69C1ljfDvl0&fbclid=IwAR058KRAQ9kCmCVYiuci7klZoTyVDAYdbV4dnynhApVIEc47bTAz0JcgPsk
 */
 
@@ -31,7 +30,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
     private RecyclerView.LayoutManager layoutManager;
     private Button exitButton;
 
-    private List<Word> data;
+    private ArrayList<Word> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,11 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
-        data = seedDataFromFile();
+        if (savedInstanceState == null) {
+            data = seedDataFromFile();
+        } else {
+            data = savedInstanceState.getParcelableArrayList("DATA");
+        }
         wordCardAdapter = new WordCardAdapter(data, this);
         wordRecyclerView.setAdapter(wordCardAdapter);
 
@@ -57,8 +60,14 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         });
     }
 
-    public List<Word> seedDataFromFile(){
-        List<Word> seededWordData = new ArrayList<Word>();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    public ArrayList<Word> seedDataFromFile(){
+        ArrayList<Word> seededWordData = new ArrayList<Word>();
 
         InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
         BufferedReader fileReader = new BufferedReader(dataFromFile);
@@ -98,11 +107,18 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         super.onActivityResult(requestCode, resultCode, intentData);
         System.out.println("!!__LIST-onActivityResult__!!");
         if (resultCode == RESULT_OK) {
-            Word editedWord = (Word) intentData.getSerializableExtra("DATA");
+            Word editedWord = intentData.getParcelableExtra("DATA");
             int index = intentData.getIntExtra("INDEX", 0);
             data.get(index).setRating(editedWord.getRating());
             data.get(index).setNote(editedWord.getNote());
             wordCardAdapter.notifyItemChanged(index);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelableArrayList("DATA", data);
+        super.onSaveInstanceState(outState);
+
     }
 }

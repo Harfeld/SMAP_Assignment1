@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -14,11 +13,9 @@ public class EditActivity extends AppCompatActivity {
     private TextView title;
     private TextView note;
     private TextView rating;
-
     private SeekBar ratingBar;
     private Button cancelButton;
     private Button applyButton;
-
     private Word theWord;
     private Intent entryIntent;
 
@@ -29,13 +26,12 @@ public class EditActivity extends AppCompatActivity {
         title = findViewById(R.id.edit_titel);
         note = findViewById(R.id.edit_notes_input);
         rating = findViewById(R.id.edit_rating_number);
-
         ratingBar = findViewById(R.id.rating_bar);
         cancelButton = findViewById(R.id.edit_cancel_button);
         applyButton = findViewById(R.id.edit_apply_button);
 
         entryIntent = getIntent();
-        theWord = (Word) entryIntent.getSerializableExtra("DATA");
+        theWord = entryIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
@@ -73,7 +69,7 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 theWord.setRating((ratingBar.getProgress()/10.0));
                 theWord.setNote(note.getText().toString());
-                Intent listIntent = new Intent(EditActivity.this, DetailsActivity.class);
+                Intent listIntent = new Intent();
                 listIntent.putExtra("DATA", theWord);
                 listIntent.putExtra("INDEX", entryIntent.getIntExtra("INDEX", 0));
                 setResult(RESULT_OK, listIntent);
