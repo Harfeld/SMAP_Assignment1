@@ -14,7 +14,7 @@ public class Word implements Serializable {
         pronounciation = _pronunciation;
         details = _details;
         rating = 0.0;
-        note = "empty";
+        note = "";
     }
 
     public String getWord() {

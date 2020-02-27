@@ -44,7 +44,10 @@ public class EditActivity extends AppCompatActivity {
         ratingBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rating.setText(String.valueOf((progress/10.0)));
+                if (progress < 100)
+                    rating.setText(String.valueOf((progress/10.0)));
+                else
+                    rating.setText(String.valueOf((progress/10)));
             }
 
             @Override

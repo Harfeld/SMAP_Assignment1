@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="88dp">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,7 +14,6 @@
             android:id="@+id/word_card_photo"
             android:layout_width="88dp"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -24,27 +24,28 @@
 
         <TextView
             android:id="@+id/word_titel"
-            android:layout_width="190dp"
+            android:layout_width="64dp"
             android:layout_height="19dp"
+            android:layout_margin="2dp"
             android:text="Titel"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-            app:layout_constraintHorizontal_bias="0.10"
+            app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toEndOf="@+id/word_card_photo"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.250" />
 
         <TextView
             android:id="@+id/word_pronounciation"
-            android:layout_width="190dp"
+            android:layout_width="80dp"
             android:layout_height="19dp"
             android:text="pronounciation"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-            app:layout_constraintHorizontal_bias="0.111"
-            app:layout_constraintStart_toEndOf="@+id/word_card_photo"
+            app:layout_constraintEnd_toEndOf="@+id/word_titel"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/word_titel"
             app:layout_constraintTop_toBottomOf="@+id/word_titel"
             app:layout_constraintVertical_bias="0" />
 
