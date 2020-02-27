@@ -22,7 +22,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/word_recycler_view"
         android:layout_width="384dp"
-        android:layout_height="602dp"
+        android:layout_height="596dp"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

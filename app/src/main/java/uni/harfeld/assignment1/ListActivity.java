@@ -37,7 +37,7 @@ public class ListActivity extends AppCompatActivity {
 
         wordRecyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
         data = testData(15);
