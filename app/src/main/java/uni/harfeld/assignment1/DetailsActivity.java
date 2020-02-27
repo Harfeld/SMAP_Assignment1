@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /*
@@ -20,6 +21,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView description;
     TextView note;
     TextView rating;
+    ImageView image;
 
     Button cancelButton;
     Button editButton;
@@ -35,6 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
         description = findViewById(R.id.details_description);
         note = findViewById(R.id.details_notes);
         rating = findViewById(R.id.details_rating);
+        image = findViewById(R.id.details_photo);
         cancelButton = findViewById(R.id.details_cancel_button);
         editButton = findViewById(R.id.details_edit_button);
 
@@ -45,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity {
         description.setText(theWord.getDetails());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
+        image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

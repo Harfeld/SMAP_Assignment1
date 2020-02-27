@@ -69,10 +69,14 @@ public class ListActivity extends AppCompatActivity {
 //        }
     }
 
+    public void onCLick(View view){
+
+    }
+
     private List<Word> testData(int amount){
         List<Word> wordList = new ArrayList<Word>();
         for (int i = 1; i<=amount; i++ ){
-            Word word = new Word(("Word" + String.valueOf(i)),("Pronounciation" + String.valueOf(i)),("Details" + String.valueOf(i)));
+            Word word = new Word(("Lion"),("Pronounciation" + String.valueOf(i)),("Details" + String.valueOf(i)));
             Random random = new Random();
             word.setRating(Math.round(random.nextDouble()*100)/10.0);
             wordList.add(word);
