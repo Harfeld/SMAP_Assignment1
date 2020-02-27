@@ -11,15 +11,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class EditActivity extends AppCompatActivity {
-    TextView title;
-    TextView note;
-    TextView rating;
+    private TextView title;
+    private TextView note;
+    private TextView rating;
 
-    SeekBar ratingBar;
-    Button cancelButton;
-    Button applyButton;
+    private SeekBar ratingBar;
+    private Button cancelButton;
+    private Button applyButton;
 
-    Word theWord;
+    private Word theWord;
+    private Intent entryIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +34,13 @@ public class EditActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.edit_cancel_button);
         applyButton = findViewById(R.id.edit_apply_button);
 
-        Intent entryIntent = getIntent();
+        entryIntent = getIntent();
         theWord = (Word) entryIntent.getSerializableExtra("DATA");
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
 
+        ratingBar.setProgress(((int) theWord.getRating()*10));
         ratingBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -68,8 +70,9 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 theWord.setRating((ratingBar.getProgress()/10.0));
                 theWord.setNote(note.getText().toString());
-                Intent listIntent = new Intent(EditActivity.this, ListActivity.class);
+                Intent listIntent = new Intent(EditActivity.this, DetailsActivity.class);
                 listIntent.putExtra("DATA", theWord);
+                listIntent.putExtra("INDEX", entryIntent.getIntExtra("INDEX", 0));
                 setResult(RESULT_OK, listIntent);
                 finish();
             }

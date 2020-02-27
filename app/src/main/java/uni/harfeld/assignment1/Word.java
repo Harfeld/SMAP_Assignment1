@@ -7,7 +7,6 @@ public class Word implements Serializable {
     private String pronounciation;
     private String details;
     private double rating;
-    private String pictureData;
     private String note;
 
     public Word(String _word, String _pronunciation, String _details) {
@@ -48,14 +47,6 @@ public class Word implements Serializable {
 
     public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public String getPictureData() {
-        return pictureData;
-    }
-
-    public void setPictureData(String pictureData) {
-        this.pictureData = pictureData;
     }
 
     public String getNote() {

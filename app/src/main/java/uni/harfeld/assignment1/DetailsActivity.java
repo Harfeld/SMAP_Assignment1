@@ -27,6 +27,7 @@ public class DetailsActivity extends AppCompatActivity {
     Button editButton;
 
     Word theWord;
+    Intent entryIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class DetailsActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.details_cancel_button);
         editButton = findViewById(R.id.details_edit_button);
 
-        Intent entryIntent = getIntent();
+        entryIntent = getIntent();
         theWord = (Word) entryIntent.getSerializableExtra("DATA");
         title.setText(theWord.getWord());
         pronounce.setText(theWord.getPronounciation());
@@ -64,27 +65,21 @@ public class DetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
                 editIntent.putExtra("DATA", theWord);
+                editIntent.putExtra("INDEX", entryIntent.getIntExtra("INDEX", 0));
                 startActivityForResult(editIntent, 1);
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
+        super.onActivityResult(requestCode, resultCode, intentData);
         System.out.println("!!__DETAILS-onActivityResult__!!");
-
-        Word word = (Word) data.getSerializableExtra("DATA");
-        title.setText(word.getWord());
-        pronounce.setText(word.getPronounciation());
-        description.setText(word.getDetails());
-        note.setText(word.getNote());
-        rating.setText(String.valueOf(word.getRating()));
-
-        System.out.println("!!__Data should be rewritten__!!");
         if (resultCode == RESULT_OK) {
+            Word editedWord = (Word) intentData.getSerializableExtra("DATA");
             Intent listIntent = new Intent(DetailsActivity.this, ListActivity.class);
-            listIntent.putExtra("DATA", word);
+            listIntent.putExtra("DATA", editedWord);
+            listIntent.putExtra("INDEX", intentData.getIntExtra("INDEX", 0));
             setResult(RESULT_OK, listIntent);
             finish();
         }

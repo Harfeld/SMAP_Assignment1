@@ -10,6 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,9 +22,10 @@ import java.util.Random;
 Heavily inspired by:
 https://developer.android.com/guide/topics/ui/layout/recyclerview
 https://www.youtube.com/watch?v=jO0RkS-Ag3A
+https://www.youtube.com/watch?v=69C1ljfDvl0&fbclid=IwAR058KRAQ9kCmCVYiuci7klZoTyVDAYdbV4dnynhApVIEc47bTAz0JcgPsk
 */
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements WordCardAdapter.OnCardClickListener {
     private RecyclerView wordRecyclerView;
     private RecyclerView.Adapter wordCardAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -40,8 +45,8 @@ public class ListActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
-        data = testData(15);
-        wordCardAdapter = new WordCardAdapter(data);
+        data = seedDataFromFile();
+        wordCardAdapter = new WordCardAdapter(data, this);
         wordRecyclerView.setAdapter(wordCardAdapter);
 
         exitButton.setOnClickListener(new View.OnClickListener() {
@@ -52,25 +57,21 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
-//        super.onActivityResult(requestCode, resultCode, intentData);
-        System.out.println("!!__LIST-onActivityResult__!!");
-//        wordCardAdapter.onActivityResult
-//        if (resultCode == RESULT_OK){
-//            Word returnedWord = (Word) intentData.getSerializableExtra("DATA");
-//            for (Word word:this.data) {
-//                if (word.getWord().equals(returnedWord.getWord())){
-//                    word = returnedWord;
-//                }
-//            }
-//            wordCardAdapter = new WordCardAdapter(this.data);
-//            wordRecyclerView.setAdapter(wordCardAdapter);
-//        }
-    }
+    public List<Word> seedDataFromFile(){
+        List<Word> seededWordData = new ArrayList<Word>();
 
-    public void onCLick(View view){
-
+        InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
+        BufferedReader fileReader = new BufferedReader(dataFromFile);
+        try {
+            String dataLine;
+            while ((dataLine = fileReader.readLine()) != null){
+                String[] wordData = dataLine.replace("\uFEFF","").split(";");
+                seededWordData.add(new Word(wordData[0], wordData[1], wordData[2]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return seededWordData;
     }
 
     private List<Word> testData(int amount){
@@ -82,5 +83,26 @@ public class ListActivity extends AppCompatActivity {
             wordList.add(word);
         }
         return wordList;
+    }
+
+    @Override
+    public void onCardClick(int position) {
+        Intent detailsIntent = new Intent(ListActivity.this, DetailsActivity.class);
+        detailsIntent.putExtra("DATA", data.get(position));
+        detailsIntent.putExtra("INDEX", position);
+        startActivityForResult(detailsIntent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
+        super.onActivityResult(requestCode, resultCode, intentData);
+        System.out.println("!!__LIST-onActivityResult__!!");
+        if (resultCode == RESULT_OK) {
+            Word editedWord = (Word) intentData.getSerializableExtra("DATA");
+            int index = intentData.getIntExtra("INDEX", 0);
+            data.get(index).setRating(editedWord.getRating());
+            data.get(index).setNote(editedWord.getNote());
+            wordCardAdapter.notifyItemChanged(index);
+        }
     }
 }

@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/details_description"
         android:layout_width="320dp"
-        android:layout_height="128dp"
+        android:layout_height="168dp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -39,7 +39,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_pronunciation"
-        app:layout_constraintVertical_bias="0.477" />
+        app:layout_constraintVertical_bias="0.5" />
 
     <TextView
         android:id="@+id/details_description_titel"
@@ -52,8 +52,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_pronunciation"
-        app:layout_constraintVertical_bias="0.107" />
+        app:layout_constraintTop_toBottomOf="@+id/details_rating"
+        app:layout_constraintVertical_bias="0.01" />
 
     <TextView
         android:id="@+id/details_pronunciation"
@@ -66,12 +66,12 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/details_titel"
         app:layout_constraintTop_toBottomOf="@+id/details_titel"
-        app:layout_constraintVertical_bias="1" />
+        app:layout_constraintVertical_bias="0" />
 
     <TextView
         android:id="@+id/details_titel"
         android:layout_width="150dp"
-        android:layout_height="32dp"
+        android:layout_height="24dp"
         android:gravity="center_vertical"
         android:text="Titel"
         android:textSize="20dp"
@@ -85,8 +85,8 @@
 
     <TextView
         android:id="@+id/details_rating"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:gravity="center"
         android:text="9.9"
         android:textSize="36sp"
@@ -96,7 +96,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_photo"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/details_photo"
