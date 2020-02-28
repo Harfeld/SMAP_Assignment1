@@ -17,7 +17,7 @@ public class EditActivity extends AppCompatActivity {
     private Button cancelButton;
     private Button applyButton;
     private Word theWord;
-    private Intent entryIntent;
+    private Intent initialIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +30,8 @@ public class EditActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.edit_cancel_button);
         applyButton = findViewById(R.id.edit_apply_button);
 
-        entryIntent = getIntent();
-        theWord = entryIntent.getParcelableExtra("DATA");
+        initialIntent = getIntent();
+        theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
@@ -71,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
                 theWord.setNote(note.getText().toString());
                 Intent listIntent = new Intent();
                 listIntent.putExtra("DATA", theWord);
-                listIntent.putExtra("INDEX", entryIntent.getIntExtra("INDEX", 0));
+                listIntent.putExtra("INDEX", initialIntent.getIntExtra("INDEX", 0));
                 setResult(RESULT_OK, listIntent);
                 finish();
             }

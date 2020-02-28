@@ -37,6 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
         editButton = findViewById(R.id.details_edit_button);
 
         initialIntent = getIntent();
+        initialIntent = getIntent();
         theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         pronounce.setText(theWord.getPronounciation());
@@ -48,7 +49,6 @@ public class DetailsActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initialIntent.setComponent(new ComponentName(DetailsActivity.this, EditActivity.class));
                 setResult(RESULT_CANCELED, initialIntent);
                 finish();
             }
@@ -57,8 +57,10 @@ public class DetailsActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initialIntent.setComponent(new ComponentName(DetailsActivity.this, EditActivity.class));
-                startActivityForResult(initialIntent, 1);
+                Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
+                editIntent.putExtra("DATA", initialIntent.getParcelableExtra("DATA"));
+                editIntent.putExtra("INDEX", initialIntent.getIntExtra("INDEX", 0));
+                startActivityForResult(editIntent, 1);
             }
         });
     }
@@ -66,7 +68,6 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
         super.onActivityResult(requestCode, resultCode, intentData);
-        System.out.println("!!__DETAILS-onActivityResult__!!");
         if (resultCode == RESULT_OK) {
             setResult(RESULT_OK, intentData);
             finish();
