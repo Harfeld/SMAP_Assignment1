@@ -20,8 +20,9 @@ public class Word implements Parcelable {
         word = _word;
         pronounciation = _pronunciation;
         details = _details;
+        definition = _word + "-dummy-definition";
         rating = 0.0;
-        note = "";
+        note = _word + "-dummy-note";
     }
 
     protected Word(Parcel in) {
