@@ -51,7 +51,8 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View card) {
-                    onCardClickListener.onCardClick(getAdapterPosition());
+                    System.out.println("!!!!!!!!!!!YOU CLICKED THE WORD - " + data.get(getAdapterPosition()).getWord());
+                    onCardClickListener.onCardClick(data.get(getAdapterPosition()).getWord());
                 }
             });
         }
@@ -69,7 +70,7 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
     @Override
     public void onBindViewHolder(@NonNull WordCardViewHolder holder, int position) {
         holder.titelView.setText(data.get(position).getWord());
-        holder.pronounciationView.setText(data.get(position).getPronounciation());
+        holder.pronounciationView.setText(data.get(position).getPronunciation());
         holder.ratingView.setText(String.valueOf(data.get(position).getRating()));
         holder.wordPicture.setImageResource(context.getResources().getIdentifier(data.get(position).getWord().toLowerCase(),"drawable",context.getPackageName()));
     }
@@ -80,7 +81,7 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
     }
 
     public interface OnCardClickListener{
-        void onCardClick(int position);
+        void onCardClick(String word);
     }
 }
 

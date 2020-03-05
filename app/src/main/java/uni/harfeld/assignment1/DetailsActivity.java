@@ -37,10 +37,9 @@ public class DetailsActivity extends AppCompatActivity {
         editButton = findViewById(R.id.details_edit_button);
 
         initialIntent = getIntent();
-        initialIntent = getIntent();
-        theWord = initialIntent.getParcelableExtra("DATA");
+        theWord = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
         title.setText(theWord.getWord());
-        pronounce.setText(theWord.getPronounciation());
+        pronounce.setText(theWord.getPronunciation());
         description.setText(theWord.getDetails());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
@@ -58,8 +57,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
-                editIntent.putExtra("DATA", initialIntent.getParcelableExtra("DATA"));
-                editIntent.putExtra("INDEX", initialIntent.getIntExtra("INDEX", 0));
+                editIntent.putExtra("WORD", theWord.getWord());
                 startActivityForResult(editIntent, 1);
             }
         });

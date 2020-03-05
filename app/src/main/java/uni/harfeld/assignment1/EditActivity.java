@@ -31,7 +31,7 @@ public class EditActivity extends AppCompatActivity {
         applyButton = findViewById(R.id.edit_apply_button);
 
         initialIntent = getIntent();
-        theWord = initialIntent.getParcelableExtra("DATA");
+        theWord = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
         rating.setText(String.valueOf(theWord.getRating()));
@@ -49,6 +49,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
+
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -70,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
                 theWord.setRating((ratingBar.getProgress()/10.0));
                 theWord.setNote(note.getText().toString());
                 Intent listIntent = new Intent();
-                listIntent.putExtra("DATA", theWord);
+//                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
                 listIntent.putExtra("INDEX", initialIntent.getIntExtra("INDEX", 0));
                 setResult(RESULT_OK, listIntent);
                 finish();
