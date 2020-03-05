@@ -12,6 +12,7 @@ public class Word implements Parcelable {
     private String word;
     private String pronounciation;
     private String details;
+    private String definition;
     private double rating;
     private String note;
 
@@ -81,6 +82,14 @@ public class Word implements Parcelable {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        definition = definition;
     }
 
     @Override
