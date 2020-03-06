@@ -37,7 +37,6 @@ public class DetailsActivity extends AppCompatActivity {
         editButton = findViewById(R.id.details_edit_button);
 
         initialIntent = getIntent();
-        initialIntent = getIntent();
         theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         pronounce.setText(theWord.getPronounciation());
