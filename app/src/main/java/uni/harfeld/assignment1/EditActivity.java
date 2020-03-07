@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class EditActivity extends AppCompatActivity {
     private TextView title;
-    private TextView note;
+    private EditText note;
     private TextView rating;
     private SeekBar ratingBar;
     private Button cancelButton;
@@ -34,9 +35,9 @@ public class EditActivity extends AppCompatActivity {
         theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
-        rating.setText(String.valueOf(theWord.getRating()));
+        rating.setText(String.valueOf((theWord.getRating() == 10.0) ? 10: theWord.getRating()));
 
-        ratingBar.setProgress(((int) theWord.getRating()*10));
+        ratingBar.setProgress(((int) (theWord.getRating()*10)));
         ratingBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

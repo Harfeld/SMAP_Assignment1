@@ -42,7 +42,7 @@ public class DetailsActivity extends AppCompatActivity {
         pronounce.setText(theWord.getPronounciation());
         description.setText(theWord.getDetails());
         note.setText(theWord.getNote());
-        rating.setText(String.valueOf(theWord.getRating()));
+        rating.setText(String.valueOf(((theWord.getRating() == 10.0) ? (int)theWord.getRating(): theWord.getRating())));
         image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
