@@ -35,7 +35,7 @@ public class EditActivity extends AppCompatActivity {
         theWord = initialIntent.getParcelableExtra("DATA");
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
-        rating.setText(String.valueOf((theWord.getRating() == 10.0) ? 10: theWord.getRating()));
+        rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
 
         ratingBar.setProgress(((int) (theWord.getRating()*10)));
         ratingBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
