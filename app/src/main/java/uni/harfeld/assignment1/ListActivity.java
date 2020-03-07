@@ -47,9 +47,12 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
-        enableStethos();
-//        seedDataFromFile();
         data = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
+        if (data.isEmpty()) {
+            data = seedDatabaseFromFile();
+        }
+
+        enableStethos();
         wordCardAdapter = new WordCardAdapter(data, this);
         wordRecyclerView.setAdapter(wordCardAdapter);
 
@@ -67,7 +70,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
     }
 
-    public void seedDataFromFile(){
+    public List<Word> seedDatabaseFromFile(){
         InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
         BufferedReader fileReader = new BufferedReader(dataFromFile);
         try {
@@ -80,6 +83,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
     }
 
     @Override
