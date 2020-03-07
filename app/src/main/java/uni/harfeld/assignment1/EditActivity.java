@@ -31,7 +31,7 @@ public class EditActivity extends AppCompatActivity {
         applyButton = findViewById(R.id.edit_apply_button);
 
         initialIntent = getIntent();
-        theWord = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
+        theWord = loadWordFromDatabase(initialIntent.getStringExtra("WORD"));
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
         rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
@@ -59,8 +59,7 @@ public class EditActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent detailsIntent = new Intent(EditActivity.this, DetailsActivity.class);
-                setResult(RESULT_CANCELED, detailsIntent);
+                setResult(RESULT_CANCELED, initialIntent);
                 finish();
             }
         });
@@ -68,14 +67,20 @@ public class EditActivity extends AppCompatActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                theWord.setRating((ratingBar.getProgress()/10.0));
-                theWord.setNote(note.getText().toString());
-                Intent listIntent = new Intent();
-//                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
-                listIntent.putExtra("INDEX", initialIntent.getIntExtra("INDEX", 0));
-                setResult(RESULT_OK, listIntent);
+                updateWordInDatabase();
+                setResult(RESULT_OK);
                 finish();
             }
         });
+    }
+
+    private Word loadWordFromDatabase(String word){
+        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(word);
+    }
+
+    private void updateWordInDatabase(){
+        theWord.setRating((ratingBar.getProgress()/10.0));
+        theWord.setNote(note.getText().toString());
+        ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().update(theWord);
     }
 }

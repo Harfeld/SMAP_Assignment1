@@ -47,9 +47,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
-        data = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
+        data = loadWordsFromDatabase();
         if (data.isEmpty()) {
-            data = seedDatabaseFromFile();
+            data = new ArrayList<>(seedDatabaseFromFile());
         }
 
         enableStethos();
@@ -70,22 +70,6 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
     }
 
-    public List<Word> seedDatabaseFromFile(){
-        InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
-        BufferedReader fileReader = new BufferedReader(dataFromFile);
-        try {
-            String dataLine;
-            while ((dataLine = fileReader.readLine()) != null){
-                String[] wordData = dataLine.replace("\uFEFF","").split(";");
-                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(new Word(wordData[0], wordData[1], wordData[2],"",0.0,""));
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
-    }
-
     @Override
     public void onCardClick(String word) {
         Intent detailsIntent = new Intent(ListActivity.this, DetailsActivity.class);
@@ -96,24 +80,34 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
         super.onActivityResult(requestCode, resultCode, intentData);
-        System.out.println("!!__LIST-onActivityResult__!!");
         if (resultCode == RESULT_OK) {
-//            Word editedWord = intentData.getParcelableExtra("DATA");
-            int index = intentData.getIntExtra("INDEX", 0);
-//            data.get(index).setRating(editedWord.getRating());
-//            data.get(index).setNote(editedWord.getNote());
-            wordCardAdapter.notifyItemChanged(index);
+            data.clear();
+            data.addAll(loadWordsFromDatabase());
+            wordCardAdapter.notifyDataSetChanged();
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putParcelableArrayList("DATA", data);
-        super.onSaveInstanceState(outState);
+    public List<Word> seedDatabaseFromFile(){
+        InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
+        BufferedReader fileReader = new BufferedReader(dataFromFile);
+        try {
+            String dataLine;
+            while ((dataLine = fileReader.readLine()) != null){
+                String[] wordData = dataLine.replace("\uFEFF","").split(";");
+                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(new Word(wordData[0], wordData[1], wordData[2],null,null,null));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return loadWordsFromDatabase();
+    }
 
+    private List<Word> loadWordsFromDatabase(){
+        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
     }
 
     //enable stethos tool for inspecting database on device / emulator through chrome
+    //Directly copied from demo during during persistance lecture.
     private void enableStethos(){
 
            /* Stetho initialization - allows for debugging features in Chrome browser

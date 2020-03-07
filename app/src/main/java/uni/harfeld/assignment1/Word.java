@@ -27,9 +27,9 @@ public class Word {
         this.word = word;
         this.pronunciation = pronunciation;
         this.details = details;
-        this.definition = word + "-dummy-definition";
-        this.rating = 0.0;
-        this.note = word + "-dummy-note";
+        this.definition = (definition == null) ? word + "-dummy-definition" : definition;
+        this.rating = (rating == null) ? 0.0 : rating;
+        this.note = (note == null) ? word + "-dummy-note" : note;
     }
 
     public String getWord() {

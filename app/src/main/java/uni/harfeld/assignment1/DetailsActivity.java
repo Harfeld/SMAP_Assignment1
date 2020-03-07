@@ -37,7 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
         editButton = findViewById(R.id.details_edit_button);
 
         initialIntent = getIntent();
-        theWord = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
+        theWord = loadWordFromDatabase(initialIntent.getStringExtra("WORD"));
         title.setText(theWord.getWord());
         pronounce.setText(theWord.getPronunciation());
         description.setText(theWord.getDetails());
@@ -70,5 +70,9 @@ public class DetailsActivity extends AppCompatActivity {
             setResult(RESULT_OK, intentData);
             finish();
         }
+    }
+
+    private Word loadWordFromDatabase(String word){
+        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(word);
     }
 }
