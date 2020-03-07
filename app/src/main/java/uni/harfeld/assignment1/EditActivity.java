@@ -34,9 +34,9 @@ public class EditActivity extends AppCompatActivity {
         theWord = ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(initialIntent.getStringExtra("WORD"));
         title.setText(theWord.getWord());
         note.setText(theWord.getNote());
-        rating.setText(String.valueOf(theWord.getRating()));
+        rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
 
-        ratingBar.setProgress(((int) theWord.getRating()*10));
+        ratingBar.setProgress(((int)(theWord.getRating()*10)));
         ratingBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
