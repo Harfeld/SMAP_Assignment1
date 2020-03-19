@@ -5,27 +5,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static uni.harfeld.assignment1.Constants.LA_LOG;
 
 public class DetailsActivity extends AppCompatActivity {
-    TextView title;
-    TextView pronounce;
-    TextView description;
-    TextView note;
-    TextView rating;
-    ImageView image;
-    Button cancelButton;
-    Button editButton;
-    Word theWord;
-    Intent initialIntent;
+    private TextView title;
+    private TextView pronounce;
+    private TextView description;
+    private TextView note;
+    private TextView rating;
+    private ImageView image;
+    private Button cancelButton;
+    private Button editButton;
+    private Word theWord;
+    private Intent initialIntent;
+    private ServiceConnection lol;
+    private WordLearnerService wordLearnerService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wordLearnerService = null;
         setContentView(R.layout.activity_details);
         title = findViewById(R.id.details_titel);
         pronounce = findViewById(R.id.details_pronunciation);
@@ -49,6 +58,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED, initialIntent);
+                unbindService(lol);
                 finish();
             }
         });
@@ -59,8 +69,28 @@ public class DetailsActivity extends AppCompatActivity {
                 Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
                 editIntent.putExtra("WORD", theWord.getWord());
                 startActivityForResult(editIntent, 1);
+                unbindService(lol);
             }
         });
+
+        lol = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
+                Log.d(LA_LOG, "WordLearner Service Connected");
+                Toast.makeText(DetailsActivity.this, "Time running is " + wordLearnerService.getRunTime() + " seconds", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                wordLearnerService = null;
+                Log.d(LA_LOG, "WordLearner Service Disconnected");
+            }
+        };
+
+        Intent blob = new Intent(this, WordLearnerService.class);
+        bindService(blob, lol, BIND_AUTO_CREATE);
     }
 
     @Override

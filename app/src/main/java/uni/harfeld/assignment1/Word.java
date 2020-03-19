@@ -25,11 +25,11 @@ public class Word {
 
     public Word(@NonNull String word, String pronunciation, String details, String definition, Double rating, String note) {
         this.word = word;
-        this.pronunciation = pronunciation;
-        this.details = details;
-        this.definition = (definition == null) ? word + "-dummy-definition" : definition;
+        this.pronunciation = (pronunciation == null || pronunciation.isEmpty()) ? "No pronunciation found": pronunciation;
+        this.details = (details == null || details.isEmpty()) ? "No details found": details;
+        this.definition = (definition == null || definition.isEmpty()) ? word + "No definition found" : definition;
         this.rating = (rating == null) ? 0.0 : rating;
-        this.note = (note == null) ? word + "-dummy-note" : note;
+        this.note = (note == null || note.isEmpty()) ? word + "No notes" : note;
     }
 
     public String getWord() {

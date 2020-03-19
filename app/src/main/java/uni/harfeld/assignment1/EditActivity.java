@@ -2,12 +2,19 @@ package uni.harfeld.assignment1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static uni.harfeld.assignment1.Constants.LA_LOG;
 
 public class EditActivity extends AppCompatActivity {
     private TextView title;
@@ -18,10 +25,13 @@ public class EditActivity extends AppCompatActivity {
     private Button applyButton;
     private Word theWord;
     private Intent initialIntent;
+    private ServiceConnection lol;
+    private WordLearnerService wordLearnerService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wordLearnerService = null;
         setContentView(R.layout.activity_edit);
         title = findViewById(R.id.edit_titel);
         note = findViewById(R.id.edit_notes_input);
@@ -60,6 +70,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED, initialIntent);
+                unbindService(lol);
                 finish();
             }
         });
@@ -69,9 +80,29 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 updateWordInDatabase();
                 setResult(RESULT_OK);
+                unbindService(lol);
                 finish();
             }
         });
+
+        lol = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
+                Log.d(LA_LOG, "WordLearner Service Connected");
+                Toast.makeText(EditActivity.this, "Time running is " + wordLearnerService.getRunTime() + " seconds", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                wordLearnerService = null;
+                Log.d(LA_LOG, "WordLearner Service Disconnected");
+            }
+        };
+
+        Intent blob = new Intent(this, WordLearnerService.class);
+        bindService(blob, lol, BIND_AUTO_CREATE);
     }
 
     private Word loadWordFromDatabase(String word){
