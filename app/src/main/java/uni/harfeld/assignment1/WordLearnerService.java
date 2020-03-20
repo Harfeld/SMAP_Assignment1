@@ -14,9 +14,15 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static uni.harfeld.assignment1.Constants.WL_LOG;
 import static uni.harfeld.assignment1.Constants.WL_RUNNING_NOTIFICATION_ID;
@@ -50,8 +56,6 @@ public class WordLearnerService extends Service {
         super.onCreate();
         Log.d(WL_LOG, "WordLearnerService OnCreate");
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-        secsRunning = 0;
     }
 
     @Override
@@ -76,21 +80,6 @@ public class WordLearnerService extends Service {
             Log.d(WL_LOG, "WordLearnerService OnStart called - Service Already running");
         }
 
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                while(running) {
-                    secsRunning++;
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        executorService.submit(r);
-
         return START_STICKY;
     }
 
@@ -108,20 +97,52 @@ public class WordLearnerService extends Service {
 
     //Business logic
     public void addWord(String wordToAdd){
-        Word newWord = new Word(wordToAdd, null, null, null, null, null);
-        ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(newWord);
+        final Word newWord = new Word(wordToAdd, null, null, null, null, null);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(newWord);
+            }
+        });
     }
 
-    public List<Word> getAllWords(){
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
+    public List<Word> getAllWords() {
+        Future<List<Word>> wordsFuture = executorService.submit(new Callable<List<Word>>() {
+            @Override
+            public List<Word> call() {
+                return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
+            }
+        });
+        try {
+            return wordsFuture.get();
+        } catch (ExecutionException | InterruptedException  e ) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public Word getWord(String wordToGet){
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(wordToGet);
+    public Word getWord(final String wordToGet){
+        Future<Word> wordFuture = executorService.submit(new Callable<Word>() {
+            @Override
+            public Word call() {
+                return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(wordToGet);
+            }
+        });
+        try {
+            return wordFuture.get();
+        } catch (ExecutionException | InterruptedException  e ) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void updateWord(Word wordToUpdate){
-
+    public void updateWord(final Word wordToUpdate){
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().update(wordToUpdate);
+            }
+        });
     }
 
     public void deleteWord(Word wordToDelete){

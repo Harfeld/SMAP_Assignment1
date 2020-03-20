@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static uni.harfeld.assignment1.Constants.LA_LOG;
+import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
 public class DetailsActivity extends AppCompatActivity {
     private TextView title;
@@ -27,14 +28,12 @@ public class DetailsActivity extends AppCompatActivity {
     private Button cancelButton;
     private Button editButton;
     private Word theWord;
-    private Intent initialIntent;
-    private ServiceConnection lol;
+
     private WordLearnerService wordLearnerService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wordLearnerService = null;
         setContentView(R.layout.activity_details);
         title = findViewById(R.id.details_titel);
         pronounce = findViewById(R.id.details_pronunciation);
@@ -45,20 +44,13 @@ public class DetailsActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.details_cancel_button);
         editButton = findViewById(R.id.details_edit_button);
 
-        initialIntent = getIntent();
-        theWord = loadWordFromDatabase(initialIntent.getStringExtra("WORD"));
-        title.setText(theWord.getWord());
-        pronounce.setText(theWord.getPronunciation());
-        description.setText(theWord.getDetails());
-        note.setText(theWord.getNote());
-        rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
-        image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));
+        bindService(new Intent(this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED, initialIntent);
-                unbindService(lol);
+                setResult(RESULT_CANCELED, getIntent());
+                unbindService(wordLearnerServiceConnection);
                 finish();
             }
         });
@@ -67,42 +59,42 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent editIntent = new Intent(DetailsActivity.this, EditActivity.class);
-                editIntent.putExtra("WORD", theWord.getWord());
+                editIntent.putExtra(WORD_TAG, theWord.getWord());
                 startActivityForResult(editIntent, 1);
-                unbindService(lol);
             }
         });
-
-        lol = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
-                Log.d(LA_LOG, "WordLearner Service Connected");
-                Toast.makeText(DetailsActivity.this, "Time running is " + wordLearnerService.getRunTime() + " seconds", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                wordLearnerService = null;
-                Log.d(LA_LOG, "WordLearner Service Disconnected");
-            }
-        };
-
-        Intent blob = new Intent(this, WordLearnerService.class);
-        bindService(blob, lol, BIND_AUTO_CREATE);
     }
+
+    ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
+            Log.d(LA_LOG, "WordLearner Service Connected");
+            Toast.makeText(DetailsActivity.this, "Time running is " + wordLearnerService.getRunTime() + " seconds", Toast.LENGTH_SHORT).show();
+
+            theWord = wordLearnerService.getWord(getIntent().getStringExtra(WORD_TAG));
+            title.setText(theWord.getWord());
+            pronounce.setText(theWord.getPronunciation());
+            description.setText(theWord.getDetails());
+            note.setText(theWord.getNote());
+            rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
+            image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            wordLearnerService = null;
+            Log.d(LA_LOG, "WordLearner Service Disconnected");
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
         super.onActivityResult(requestCode, resultCode, intentData);
         if (resultCode == RESULT_OK) {
             setResult(RESULT_OK, intentData);
+            unbindService(wordLearnerServiceConnection);
             finish();
         }
-    }
-
-    private Word loadWordFromDatabase(String word){
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(word);
     }
 }

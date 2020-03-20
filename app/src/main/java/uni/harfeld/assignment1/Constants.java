@@ -5,4 +5,6 @@ public class Constants {
     public static final String LA_LOG = "LIST_ACTIVITY_LOG";
 
     public static final int WL_RUNNING_NOTIFICATION_ID = 999;
+
+    public static final String WORD_TAG = "WORD_KEY";
 }

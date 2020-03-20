@@ -15,7 +15,7 @@ public class WordApplication extends Application {
 
     public WordDatabase getWordDatabase(){
         if (wordDatabase == null){
-            wordDatabase = Room.databaseBuilder(this, WordDatabase.class, "my_words").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+            wordDatabase = Room.databaseBuilder(this, WordDatabase.class, "my_words").build();
         }
         return wordDatabase;
     }

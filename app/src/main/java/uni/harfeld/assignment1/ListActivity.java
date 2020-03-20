@@ -20,9 +20,11 @@ import com.facebook.stetho.Stetho;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import static uni.harfeld.assignment1.Constants.LA_LOG;
+import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
 /*
 Heavily inspired by:
@@ -41,12 +43,12 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        enableStethos();
+//        enableStethos();//TODO TEMPORARY - Can be removed before submition
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        startWordLearnerService();
-        bindToWordLeanerService();
+        startService(new Intent(ListActivity.this, WordLearnerService.class));
+        bindService(new Intent(ListActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
 
         wordRecyclerView = findViewById(R.id.word_recycler_view);
         exitButton = findViewById(R.id.exit_button);
@@ -56,19 +58,21 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         layoutManager = new LinearLayoutManager(this.getParent());
         wordRecyclerView.setLayoutManager(layoutManager);
 
-//        wordCardAdapter = new WordCardAdapter(data, this);
-//        wordRecyclerView.setAdapter(wordCardAdapter);
+        data = new ArrayList<Word>();
+        wordCardAdapter = new WordCardAdapter(data, ListActivity.this);
+        wordRecyclerView.setAdapter(wordCardAdapter);
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+                unbindService(wordLearnerServiceConnection);
             }
         });
 
         secsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //TODO TEMPORARY - Can be removed before submition
                 if(wordLearnerService!=null){
                     int blob = wordLearnerService.getRunTime();
                     //update textView
@@ -76,23 +80,8 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
                 } else {
                     Toast.makeText(ListActivity.this, "Not bound yet", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-    }
-
-    private void bindToWordLeanerService(){
-        Intent blob = new Intent(ListActivity.this, WordLearnerService.class);
-        bindService(blob, wordLearnerServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    private void unbindWordLearnerService(){
-        unbindService(wordLearnerServiceConnection);
-    }
-
-    private void startWordLearnerService(){
-        Intent backgroundServiceIntent = new Intent(ListActivity.this, WordLearnerService.class);
-        startService(backgroundServiceIntent);
     }
 
     ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
@@ -101,9 +90,11 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
             wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
             Log.d(LA_LOG, "WordLearner Service Connected");
 
-            data = wordLearnerService.getAllWords();
-            wordCardAdapter = new WordCardAdapter(data, ListActivity.this);
-            wordRecyclerView.setAdapter(wordCardAdapter);
+            data.addAll(wordLearnerService.getAllWords());
+            if (data.isEmpty()) {
+                data.addAll(seedDatabaseFromFile());
+            }
+            wordCardAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -121,7 +112,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
     @Override
     public void onCardClick(String word) {
         Intent detailsIntent = new Intent(ListActivity.this, DetailsActivity.class);
-        detailsIntent.putExtra("WORD", word);
+        detailsIntent.putExtra(WORD_TAG, word);
         startActivityForResult(detailsIntent, 1);
     }
 
@@ -135,53 +126,38 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         }
     }
 
-//    private List<Word> seedDatabaseFromFile(){
-//        InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
-//        BufferedReader fileReader = new BufferedReader(dataFromFile);
-//        try {
-//            String dataLine;
-//            while ((dataLine = fileReader.readLine()) != null){
-//                String[] wordData = dataLine.replace("\uFEFF","").split(";");
-//                wordLearnerService.addWord(wordData[0]);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return wordLearnerService.getAllWords();
-//    }
-
-    private List<Word> seedDatabaseFromFile(){
+    private List<Word> seedDatabaseFromFile() {
         InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
         BufferedReader fileReader = new BufferedReader(dataFromFile);
         try {
             String dataLine;
             while ((dataLine = fileReader.readLine()) != null){
                 String[] wordData = dataLine.replace("\uFEFF","").split(";");
-                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(new Word(wordData[0], wordData[1], wordData[2],null,null,null));
+                wordLearnerService.addWord(wordData[0]);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().getAll();
+        return wordLearnerService.getAllWords();
     }
 
-    //enable stethos tool for inspecting database on device / emulator through chrome
-    //Directly copied from demo during during persistance lecture.
-    private void enableStethos(){
-
-           /* Stetho initialization - allows for debugging features in Chrome browser
-           See http://facebook.github.io/stetho/ for details
-           1) Open chrome://inspect/ in a Chrome browse
-           2) select 'inspect' on your app under the specific device/emulator
-           3) select resources tab
-           4) browse database tables under Web SQL
-         */
-        Stetho.initialize(Stetho.newInitializerBuilder(this)
-                .enableDumpapp(
-                        Stetho.defaultDumperPluginsProvider(this))
-                .enableWebKitInspector(
-                        Stetho.defaultInspectorModulesProvider(this))
-                .build());
-        /* end Stethos */
-    }
+//    //enable stethos tool for inspecting database on device / emulator through chrome
+//    //Directly copied from demo during during persistance lecture.
+//    private void enableStethos(){//TODO TEMPORARY - Can be removed before submition
+//
+//           /* Stetho initialization - allows for debugging features in Chrome browser
+//           See http://facebook.github.io/stetho/ for details
+//           1) Open chrome://inspect/ in a Chrome browse
+//           2) select 'inspect' on your app under the specific device/emulator
+//           3) select resources tab
+//           4) browse database tables under Web SQL
+//         */
+//        Stetho.initialize(Stetho.newInitializerBuilder(this)
+//                .enableDumpapp(
+//                        Stetho.defaultDumperPluginsProvider(this))
+//                .enableWebKitInspector(
+//                        Stetho.defaultInspectorModulesProvider(this))
+//                .build());
+//        /* end Stethos */
+//    }
 }
