@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import uni.harfeld.assignment1.Models.Word;
+
 import static uni.harfeld.assignment1.Constants.LA_LOG;
 import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
@@ -70,7 +72,6 @@ public class DetailsActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
             Log.d(LA_LOG, "WordLearner Service Connected");
-            Toast.makeText(DetailsActivity.this, "Time running is " + wordLearnerService.getRunTime() + " seconds", Toast.LENGTH_SHORT).show();
 
             theWord = wordLearnerService.getWord(getIntent().getStringExtra(WORD_TAG));
             title.setText(theWord.getWord());

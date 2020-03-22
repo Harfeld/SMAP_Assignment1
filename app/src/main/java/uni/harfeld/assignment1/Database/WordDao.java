@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.harfeld.assignment1.Database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,6 +7,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+
+import uni.harfeld.assignment1.Models.Word;
 
 /*
 Heavily inspired by:

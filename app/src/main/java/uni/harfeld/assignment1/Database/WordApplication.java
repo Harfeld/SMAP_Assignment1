@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.harfeld.assignment1.Database;
 
 import android.app.Application;
 import androidx.room.Room;

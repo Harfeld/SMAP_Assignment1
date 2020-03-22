@@ -15,15 +15,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import uni.harfeld.assignment1.Models.Word;
+import uni.harfeld.assignment1.Models.WordAPIObject;
 
 import static uni.harfeld.assignment1.Constants.LA_LOG;
+import static uni.harfeld.assignment1.Constants.WL_LOG;
+import static uni.harfeld.assignment1.Constants.WORD_API_TOKEN;
+import static uni.harfeld.assignment1.Constants.WORD_API_URL;
 import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
 /*
@@ -41,14 +61,16 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
     private WordLearnerService wordLearnerService;
 
+    RequestQueue queue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        enableStethos();//TODO TEMPORARY - Can be removed before submition
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        startService(new Intent(ListActivity.this, WordLearnerService.class));
-        bindService(new Intent(ListActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
+//        startService(new Intent(ListActivity.this, WordLearnerService.class));
+//        bindService(new Intent(ListActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
 
         wordRecyclerView = findViewById(R.id.word_recycler_view);
         exitButton = findViewById(R.id.exit_button);
@@ -59,6 +81,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         wordRecyclerView.setLayoutManager(layoutManager);
 
         data = new ArrayList<Word>();
+
+        sendRequest(WORD_API_URL + "lion");
+
         wordCardAdapter = new WordCardAdapter(data, ListActivity.this);
         wordRecyclerView.setAdapter(wordCardAdapter);
 
@@ -72,14 +97,8 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
         secsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { //TODO TEMPORARY - Can be removed before submition
-                if(wordLearnerService!=null){
-                    int blob = wordLearnerService.getRunTime();
-                    //update textView
-                    Toast.makeText(ListActivity.this, "Time running is " + blob + " seconds", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ListActivity.this, "Not bound yet", Toast.LENGTH_SHORT).show();
-                }
+            public void onClick(View v) { //TODO TEMPORARY - Can be turned into add button
+
             }
         });
     }
@@ -160,4 +179,38 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 //                .build());
 //        /* end Stethos */
 //    }
+
+    private void sendRequest(String url){
+        if(queue==null){
+            queue = Volley.newRequestQueue(this);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonResponse) {
+                        parseJson(jsonResponse);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(WL_LOG, "JSON Request failed", error);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Authorization", WORD_API_TOKEN);
+                return params;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
+    private void parseJson(String json){
+        Gson gson = new GsonBuilder().create();
+        WordAPIObject testWord = gson.fromJson(json, WordAPIObject.class);
+    }
 }

@@ -14,31 +14,46 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
+import uni.harfeld.assignment1.Database.WordApplication;
+import uni.harfeld.assignment1.Models.Word;
+import uni.harfeld.assignment1.Models.WordAPIObject;
 
 import static uni.harfeld.assignment1.Constants.WL_LOG;
 import static uni.harfeld.assignment1.Constants.WL_RUNNING_NOTIFICATION_ID;
+import static uni.harfeld.assignment1.Constants.WORD_API_TOKEN;
+import static uni.harfeld.assignment1.Constants.WORD_API_URL;
 
 /*
 Heavily inspired by:
-service demos
+service demos from lecture
+Networking demos from lecture
 https://developer.android.com/reference/java/util/concurrent/ExecutorService
 https://developer.android.com/reference/java/util/concurrent/Executor
 */
 
 public class WordLearnerService extends Service {
     private boolean running = false;
-    ExecutorService executorService;
-
-    private int secsRunning;
+    private ExecutorService executorService;
+    private RequestQueue requestQueue;
 
     public class WordLearnerServiceBinder extends Binder {
         WordLearnerService getService(){
@@ -97,7 +112,7 @@ public class WordLearnerService extends Service {
 
     //Business logic
     public void addWord(String wordToAdd){
-        final Word newWord = new Word(wordToAdd, null, null, null, null, null);
+        final Word newWord = new Word(wordToAdd, null, null, null, null, null, null);
         executorService.submit(new Runnable() {
             @Override
             public void run() {
@@ -146,10 +161,44 @@ public class WordLearnerService extends Service {
     }
 
     public void deleteWord(Word wordToDelete){
-
     }
 
-    public int getRunTime(){
-        return  secsRunning;
+    private void searchWordInAPI(String WordToSearch){
+        if(requestQueue==null){
+            requestQueue = Volley.newRequestQueue(this);
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, WORD_API_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String jsonResponse) {
+                        parseJson(jsonResponse);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(WL_LOG, "JSON Request failed", error);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Authorization", WORD_API_TOKEN);
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    private void parseJson(String json){
+        Gson gson = new GsonBuilder().create();
+        WordAPIObject testWord = gson.fromJson(json, WordAPIObject.class);
+        broadcastSearchResult();
+    }
+
+    private void broadcastSearchResult(){
+
     }
 }

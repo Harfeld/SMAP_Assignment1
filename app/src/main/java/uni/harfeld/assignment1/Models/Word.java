@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.harfeld.assignment1.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,14 +22,24 @@ public class Word {
     private String definition;
     private double rating;
     private String note;
+    private String imageUrl;
 
-    public Word(@NonNull String word, String pronunciation, String details, String definition, Double rating, String note) {
+    public Word(@NonNull String word, String pronunciation, String details, String definition, Double rating, String note, String imageUrl) {
         this.word = word;
         this.pronunciation = (pronunciation == null || pronunciation.isEmpty()) ? "No pronunciation found": pronunciation;
         this.details = (details == null || details.isEmpty()) ? "No details found": details;
         this.definition = (definition == null || definition.isEmpty()) ? word + "No definition found" : definition;
         this.rating = (rating == null) ? 0.0 : rating;
         this.note = (note == null || note.isEmpty()) ? word + "No notes" : note;
+        this.imageUrl = (imageUrl == null || imageUrl.isEmpty()) ? "N/A" : imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getWord() {
