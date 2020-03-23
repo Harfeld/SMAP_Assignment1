@@ -10,4 +10,6 @@
     <string name="words_txt">My Words:</string>
     <string name="add_txt">add</string>
     <string name="search_query_txt">Search and add w</string>
+    <string name="delete_txt">Delete</string>
+    <string name="definition_txt">Definition</string>
 </resources>

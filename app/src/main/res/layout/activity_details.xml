@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Inspired partly by:-->
+<!--https://stackoverflow.com/questions/38733594/android-adding-image-to-button-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,9 +11,44 @@
     tools:context=".DetailsActivity">
 
     <TextView
+        android:id="@+id/details_definition"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/details_description"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/details_description"
+        app:layout_constraintTop_toBottomOf="@+id/details_definition_titel" />
+
+    <TextView
+        android:id="@+id/details_definition_titel"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:gravity="center_vertical"
+        android:text="@string/definition_txt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/details_description_titel"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/details_description_titel"
+        app:layout_constraintTop_toBottomOf="@+id/details_description" />
+
+    <Button
+        android:id="@+id/details_delete_button"
+        android:layout_width="80dp"
+        android:layout_height="48dp"
+        android:text="@string/delete_txt"
+        app:layout_constraintBottom_toBottomOf="@+id/details_cancel_button"
+        app:layout_constraintEnd_toStartOf="@+id/details_edit_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/details_cancel_button"
+        app:layout_constraintTop_toTopOf="@+id/details_cancel_button"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
         android:id="@+id/details_notes"
         android:layout_width="320dp"
-        android:layout_height="128dp"
+        android:layout_height="wrap_content"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -21,7 +58,7 @@
     <TextView
         android:id="@+id/details_description"
         android:layout_width="320dp"
-        android:layout_height="168dp"
+        android:layout_height="wrap_content"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,21 +67,19 @@
 
     <TextView
         android:id="@+id/details_notes_titel"
-        android:layout_width="150dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/notes_txt"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_pronunciation"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="@+id/details_definition_titel"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/details_definition_titel"
+        app:layout_constraintTop_toBottomOf="@+id/details_definition" />
 
     <TextView
         android:id="@+id/details_description_titel"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:gravity="center_vertical"
         android:text="@string/description_txt"
@@ -116,12 +151,12 @@
         android:layout_width="80dp"
         android:layout_height="48dp"
         android:text="@string/cancel_txt"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/details_edit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_photo"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintTop_toTopOf="@+id/details_edit_button"
+        app:layout_constraintVertical_bias="1" />
 
     <Button
         android:id="@+id/details_edit_button"
@@ -133,6 +168,6 @@
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_photo"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintVertical_bias="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

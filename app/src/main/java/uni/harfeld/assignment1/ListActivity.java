@@ -64,8 +64,8 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-//        startService(new Intent(ListActivity.this, WordLearnerService.class));
-//        bindService(new Intent(ListActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
+        startService(new Intent(ListActivity.this, WordLearnerService.class));
+        bindService(new Intent(ListActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
 
         wordRecyclerView = findViewById(R.id.word_recycler_view);
         exitButton = findViewById(R.id.exit_button);
@@ -77,7 +77,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
         data = new ArrayList<Word>();
 
-        sendRequest(WORD_API_URL + "lion");
+//        sendRequest(WORD_API_URL + "lion");
 
         wordCardAdapter = new WordCardAdapter(data, ListActivity.this);
         wordRecyclerView.setAdapter(wordCardAdapter);
@@ -174,38 +174,38 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 //                .build());
 //        /* end Stethos */
 //    }
-
-    private void sendRequest(String url){
-        if(queue==null){
-            queue = Volley.newRequestQueue(this);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String jsonResponse) {
-                        parseJson(jsonResponse);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(WL_LOG, "JSON Request failed", error);
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorization", WORD_API_TOKEN);
-                return params;
-            }
-        };
-
-        queue.add(stringRequest);
-    }
-
-    private void parseJson(String json){
-        Gson gson = new GsonBuilder().create();
-        WordAPIObject testWord = gson.fromJson(json, WordAPIObject.class);
-    }
+//
+//    private void sendRequest(String url){
+//        if(queue==null){
+//            queue = Volley.newRequestQueue(this);
+//        }
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String jsonResponse) {
+//                        parseJson(jsonResponse);
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e(WL_LOG, "JSON Request failed", error);
+//            }
+//        }){
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("Content-Type", "application/json; charset=UTF-8");
+//                params.put("Authorization", WORD_API_TOKEN);
+//                return params;
+//            }
+//        };
+//
+//        queue.add(stringRequest);
+//    }
+//
+//    private void parseJson(String json){
+//        Gson gson = new GsonBuilder().create();
+//        WordAPIObject testWord = gson.fromJson(json, WordAPIObject.class);
+//    }
 }

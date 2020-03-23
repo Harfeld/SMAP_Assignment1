@@ -11,4 +11,6 @@
     <string name="exit_txt">Luk</string>
     <string name="add_txt">Tilføj</string>
     <string name="search_query_txt">Søg og tilføj ord</string>
+    <string name="delete_txt">Delete</string>
+    <string name="definition_txt">Definition</string>
 </resources>

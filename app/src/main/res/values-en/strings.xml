@@ -11,4 +11,6 @@
     <string name="words_txt">My Words:</string>
     <string name="add_txt">Add</string>
     <string name="search_query_txt">Search and add word</string>
+    <string name="delete_txt">Fjern</string>
+    <string name="definition_txt">Definition</string>
 </resources>
