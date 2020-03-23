@@ -24,6 +24,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView title;
     private TextView pronounce;
     private TextView description;
+    private TextView definition;
     private TextView note;
     private TextView rating;
     private ImageView image;
@@ -40,6 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
         title = findViewById(R.id.details_titel);
         pronounce = findViewById(R.id.details_pronunciation);
         description = findViewById(R.id.details_description);
+        definition = findViewById(R.id.details_definition);
         note = findViewById(R.id.details_notes);
         rating = findViewById(R.id.details_rating);
         image = findViewById(R.id.details_photo);
@@ -77,6 +79,7 @@ public class DetailsActivity extends AppCompatActivity {
             title.setText(theWord.getWord());
             pronounce.setText(theWord.getPronunciation());
             description.setText(theWord.getDetails());
+            definition.setText(theWord.getDefinition());
             note.setText(theWord.getNote());
             rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
             image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));

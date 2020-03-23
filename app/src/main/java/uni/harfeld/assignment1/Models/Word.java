@@ -28,9 +28,9 @@ public class Word {
         this.word = word;
         this.pronunciation = (pronunciation == null || pronunciation.isEmpty()) ? "No pronunciation found": pronunciation;
         this.details = (details == null || details.isEmpty()) ? "No details found": details;
-        this.definition = (definition == null || definition.isEmpty()) ? word + "No definition found" : definition;
+        this.definition = (definition == null || definition.isEmpty()) ? "No definition found" : definition;
         this.rating = (rating == null) ? 0.0 : rating;
-        this.note = (note == null || note.isEmpty()) ? word + "No notes" : note;
+        this.note = (note == null || note.isEmpty()) ? "No notes" : note;
         this.imageUrl = (imageUrl == null || imageUrl.isEmpty()) ? "N/A" : imageUrl;
     }
 
