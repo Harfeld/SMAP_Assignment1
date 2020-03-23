@@ -176,8 +176,8 @@ public class WordLearnerService extends Service {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(WL_LOG, "JSON Request failed", error);
+            public void onErrorResponse(VolleyError requestError) {
+                Log.e(WL_LOG, "JSON Request failed", requestError);
             }
         }){
             @Override

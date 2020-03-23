@@ -9,4 +9,6 @@
     <string name="rating_txt">Ord Vurdering:</string>
     <string name="words_txt">Mine Ord:</string>
     <string name="exit_txt">Luk</string>
+    <string name="add_txt">Tilføj</string>
+    <string name="search_query_txt">Søg og tilføj ord</string>
 </resources>

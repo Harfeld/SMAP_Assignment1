@@ -8,4 +8,6 @@
     <string name="apply_txt">Apply</string>
     <string name="rating_txt">Word Rating:</string>
     <string name="words_txt">My Words:</string>
+    <string name="add_txt">add</string>
+    <string name="search_query_txt">Search and add w</string>
 </resources>

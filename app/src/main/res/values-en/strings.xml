@@ -9,4 +9,6 @@
     <string name="notes_txt">Notes:</string>
     <string name="rating_txt">Word Rating:</string>
     <string name="words_txt">My Words:</string>
+    <string name="add_txt">Add</string>
+    <string name="search_query_txt">Search and add word</string>
 </resources>

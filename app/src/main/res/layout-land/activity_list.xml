@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="136dp"
+        android:layout_width="200dp"
         android:layout_height="64dp"
         android:padding="8dp"
         android:text="@string/words_txt"
@@ -23,9 +23,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/search_bar_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/foreground_shaded"
+        android:queryHint="Søg og tilføj ord"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/word_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="1">
+        <SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:queryHint="@string/search_query_txt" />
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="@string/add_txt"
+        app:layout_constraintBottom_toTopOf="@+id/exit_button"
+        app:layout_constraintEnd_toEndOf="@+id/exit_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/exit_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
+
     <Button
         android:id="@+id/exit_button"
-        android:layout_width="64dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="@string/exit_txt"
         app:layout_constraintBottom_toBottomOf="parent"

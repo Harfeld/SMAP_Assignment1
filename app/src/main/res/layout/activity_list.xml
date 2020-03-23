@@ -7,19 +7,6 @@
     android:background="@color/foreground"
     tools:context=".ListActivity">
 
-    <Button
-        android:id="@+id/exit_button"
-        android:layout_width="64dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/exit_txt"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.729"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="128dp"
@@ -34,19 +21,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/secs_button"
-        android:layout_width="64dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/exit_txt"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.276"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/word_recycler_view"
         android:layout_width="match_parent"
@@ -54,12 +28,59 @@
         android:layout_marginBottom="4dp"
         android:background="@color/background"
         android:padding="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/exit_button"
+        app:layout_constraintBottom_toTopOf="@+id/search_bar_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/card_word_item" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/search_bar_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:queryHint="Søg og tilføj ord"
+        android:background="@color/foreground_shaded"
+        app:cardCornerRadius="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_button"
+        app:layout_constraintEnd_toEndOf="@+id/add_button"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@+id/exit_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1">
+        <SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:queryHint="@string/search_query_txt"/>
+    </androidx.cardview.widget.CardView>
+
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="@string/add_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
+
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="@string/exit_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
