@@ -53,7 +53,6 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        enableStethos();//TODO TEMPORARY - Can be removed before submition
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
@@ -89,6 +88,20 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
                 wordLearnerService.addWord(searchBar.getQuery().toString());
             }
         });
+
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(LA_LOG, "Searching for word " + searchBar.getQuery().toString());
+                wordLearnerService.addWord(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
@@ -121,18 +134,7 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(LA_LOG, "onStart: Registering broadcast Receivers");
-        IntentFilter searchResultFilter = new IntentFilter();
-        searchResultFilter.addAction(SEARCH_RESULT_BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onServiceResultBroadcast, searchResultFilter);
-
-        IntentFilter updateFilter = new IntentFilter();
-        updateFilter.addAction(UPDATE_BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onServiceResultBroadcast, updateFilter);
-
-        IntentFilter deleteFilter = new IntentFilter();
-        deleteFilter.addAction(DELETE_BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(onServiceResultBroadcast, deleteFilter);
+        registerBroadcastReceivers();
     }
 
     private BroadcastReceiver onServiceResultBroadcast = new BroadcastReceiver() {
@@ -141,14 +143,14 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
             switch (intent.getAction()){
                 case SEARCH_RESULT_BROADCAST_ACTION:
                     if (intent.getStringExtra(SEARCH_RESULT_EXTRA).equals(SEARCH_SUCCESS)){
-                        Toast.makeText(ListActivity.this, "Word Added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListActivity.this, "Word Is Added", Toast.LENGTH_SHORT).show();
                         Log.d(LA_LOG, "onReceive: Successful search result broadcast received");
 
                         data.clear();
                         data.addAll(wordLearnerService.getAllWords());
                         wordCardAdapter.notifyDataSetChanged();
                     } else {
-                        Toast.makeText(ListActivity.this, "No Word Found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ListActivity.this, "Word Not Found", Toast.LENGTH_SHORT).show();
                         Log.d(LA_LOG, "onReceive: Unsuccessful search result broadcast received");
                     }
                     break;
@@ -173,23 +175,17 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         }
     };
 
-    //enable stethos tool for inspecting database on device / emulator through chrome
-    //Directly copied from demo during during persistance lecture.
-    private void enableStethos(){//TODO TEMPORARY - Can be removed before submition
+    private void registerBroadcastReceivers(){
+        Log.d(LA_LOG, "Registering broadcast Receivers");
+        IntentFilter resultFilter = new IntentFilter();
+        resultFilter.addAction(SEARCH_RESULT_BROADCAST_ACTION);
+        resultFilter.addAction(UPDATE_BROADCAST_ACTION);
+        resultFilter.addAction(DELETE_BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(onServiceResultBroadcast, resultFilter);
+    }
 
-           /* Stetho initialization - allows for debugging features in Chrome browser
-           See http://facebook.github.io/stetho/ for details
-           1) Open chrome://inspect/ in a Chrome browse
-           2) select 'inspect' on your app under the specific device/emulator
-           3) select resources tab
-           4) browse database tables under Web SQL
-         */
-        Stetho.initialize(Stetho.newInitializerBuilder(this)
-                .enableDumpapp(
-                        Stetho.defaultDumperPluginsProvider(this))
-                .enableWebKitInspector(
-                        Stetho.defaultInspectorModulesProvider(this))
-                .build());
-        /* end Stethos */
+    private void unregisterBroadcastReceivers(){
+        Log.d(LA_LOG, "Unregistering broadcast Receivers");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onServiceResultBroadcast);
     }
 }
