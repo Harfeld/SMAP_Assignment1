@@ -97,7 +97,8 @@ public class DetailsActivity extends AppCompatActivity {
             if (theWord.getImageUrl() != null){
                 Glide.with(image.getContext()).load(theWord.getImageUrl()).into(image);
             } else {
-                //missing default gif
+                image.setImageResource(getResources().getIdentifier("defaultmeme","drawable", getPackageName()));
+
             }
         }
 

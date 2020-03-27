@@ -6,6 +6,7 @@ public class Constants {
     public static final String WL_LOG = "WORDLEARNER_SERVICE_LOG";
     public static final String LA_LOG = "LIST_ACTIVITY_LOG";
     public static final int WL_RUNNING_NOTIFICATION_ID = 999;
+    public static final int WL_REMINDING_NOTIFICATION_ID = 998;
     public static final String WORD_TAG = "WORD_KEY";
     public static final String UPDATE_BROADCAST_ACTION = "UPDATE.BROADCAST.ACTION";
     public static final String DELETE_BROADCAST_ACTION = "DELETE.BROADCAST.ACTION";

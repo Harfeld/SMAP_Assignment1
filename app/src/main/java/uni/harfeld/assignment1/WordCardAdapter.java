@@ -77,7 +77,7 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
         if (data.get(position).getImageUrl() != null){
             Glide.with(holder.wordPicture.getContext()).load(data.get(position).getImageUrl()).into(holder.wordPicture);
         } else {
-            //missing default gif
+            holder.wordPicture.setImageResource(context.getResources().getIdentifier("defaultmeme.jpg","drawable",context.getPackageName()));
         }
     }
 

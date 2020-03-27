@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -52,6 +53,7 @@ import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_EXTRA;
 import static uni.harfeld.assignment1.Constants.SEARCH_SUCCESS;
 import static uni.harfeld.assignment1.Constants.UPDATE_BROADCAST_ACTION;
 import static uni.harfeld.assignment1.Constants.WL_LOG;
+import static uni.harfeld.assignment1.Constants.WL_REMINDING_NOTIFICATION_ID;
 import static uni.harfeld.assignment1.Constants.WL_RUNNING_NOTIFICATION_ID;
 import static uni.harfeld.assignment1.Constants.WORD_API_TOKEN;
 import static uni.harfeld.assignment1.Constants.WORD_API_URL;
@@ -111,6 +113,35 @@ public class WordLearnerService extends Service {
             Log.d(WL_LOG, "WordLearnerService OnStart called - Service Already running");
         }
 
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                Random random = new Random();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    NotificationChannel notificationChannel = new NotificationChannel("wordLearnerReminderChannel", "WordLearnerReminderChannel", NotificationManager.IMPORTANCE_HIGH);
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
+                while (running){
+                    try{
+                        List<Word> words = getAllWords();
+                        Word wordToNotify = words.get(random.nextInt(words.size()));
+
+                        Notification wordLearnerNotification = new NotificationCompat.Builder(WordLearnerService.this, "wordLearnerReminderChannel")
+                                .setContentTitle("Remember to study your favourite words")
+                                .setContentText("Wordsuggestion of the minute: " + wordToNotify.getWord())
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setTicker("Wordsuggestion of the minute: " + wordToNotify.getWord())
+                                .setChannelId("wordLearnerReminderChannel")
+                                .build();
+                        startForeground(WL_REMINDING_NOTIFICATION_ID, wordLearnerNotification);
+                        Thread.sleep(60000);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         return START_STICKY;
     }
 
