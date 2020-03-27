@@ -74,11 +74,7 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
         holder.titelView.setText(data.get(position).getWord());
         holder.pronounciationView.setText(data.get(position).getPronunciation());
         holder.ratingView.setText(((data.get(position).getRating() == 10.0) ? String.valueOf((int)data.get(position).getRating()) : String.valueOf(data.get(position).getRating())));
-        if (data.get(position).getImageUrl() != null){
-            Glide.with(holder.wordPicture.getContext()).load(data.get(position).getImageUrl()).into(holder.wordPicture);
-        } else {
-            holder.wordPicture.setImageResource(context.getResources().getIdentifier("defaultmeme.jpg","drawable",context.getPackageName()));
-        }
+        Glide.with(holder.wordPicture.getContext()).load(data.get(position).getImageUrl()).placeholder(R.drawable.howboutno).into(holder.wordPicture);
     }
 
     @Override

@@ -94,12 +94,7 @@ public class DetailsActivity extends AppCompatActivity {
             definition.setText(theWord.getDefinition());
             note.setText(theWord.getNote());
             rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
-            if (theWord.getImageUrl() != null){
-                Glide.with(image.getContext()).load(theWord.getImageUrl()).into(image);
-            } else {
-                image.setImageResource(getResources().getIdentifier("defaultmeme","drawable", getPackageName()));
-
-            }
+            Glide.with(image.getContext()).load(theWord.getImageUrl()).placeholder(R.drawable.howboutno).into(image);
         }
 
         @Override
