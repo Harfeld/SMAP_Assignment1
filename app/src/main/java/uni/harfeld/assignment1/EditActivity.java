@@ -12,21 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import uni.harfeld.assignment1.Database.WordApplication;
 import uni.harfeld.assignment1.Models.Word;
 
 import static uni.harfeld.assignment1.Constants.LA_LOG;
 import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
 public class EditActivity extends AppCompatActivity {
-    private TextView title;
-    private TextView note;
-    private TextView rating;
+    private TextView title, note, rating;
     private SeekBar ratingBar;
-    private Button cancelButton;
-    private Button applyButton;
+    private Button cancelButton, applyButton;
     private Word theWord;
 
     private WordLearnerService wordLearnerService;
@@ -102,10 +97,6 @@ public class EditActivity extends AppCompatActivity {
             Log.d(LA_LOG, "WordLearner Service Disconnected");
         }
     };
-
-    private Word loadWordFromDatabase(String word){
-        return ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().findByWord(word);
-    }
 
     private void updateWordInDatabase(){
         theWord.setRating((ratingBar.getProgress()/10.0));

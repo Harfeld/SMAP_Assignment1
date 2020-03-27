@@ -11,12 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import uni.harfeld.assignment1.Models.Word;
 
 /*
 Heavily inspired by:
+Networking demos from lecture
 https://developer.android.com/guide/topics/ui/layout/recyclerview
 https://stackoverflow.com/questions/43010526/get-android-resource-id-from-string-in-an-adapter
 https://www.youtube.com/watch?v=69C1ljfDvl0&fbclid=IwAR058KRAQ9kCmCVYiuci7klZoTyVDAYdbV4dnynhApVIEc47bTAz0JcgPsk
@@ -71,7 +74,11 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
         holder.titelView.setText(data.get(position).getWord());
         holder.pronounciationView.setText(data.get(position).getPronunciation());
         holder.ratingView.setText(((data.get(position).getRating() == 10.0) ? String.valueOf((int)data.get(position).getRating()) : String.valueOf(data.get(position).getRating())));
-        holder.wordPicture.setImageResource(context.getResources().getIdentifier(data.get(position).getWord().toLowerCase(),"drawable",context.getPackageName()));
+        if (data.get(position).getImageUrl() != null){
+            Glide.with(holder.wordPicture.getContext()).load(data.get(position).getImageUrl()).into(holder.wordPicture);
+        } else {
+            //missing default gif
+        }
     }
 
     @Override

@@ -13,26 +13,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.bumptech.glide.Glide;
 
 import uni.harfeld.assignment1.Models.Word;
 
 import static uni.harfeld.assignment1.Constants.LA_LOG;
 import static uni.harfeld.assignment1.Constants.WORD_TAG;
 
+/*
+Heavily inspired by:
+Networking demos from lecture
+*/
+
 public class DetailsActivity extends AppCompatActivity {
-    private TextView title;
-    private TextView pronounce;
-    private TextView description;
-    private TextView definition;
-    private TextView note;
-    private TextView rating;
+    private TextView title, pronounce, description, definition, note, rating;
     private ImageView image;
-    private Button cancelButton;
-    private Button editButton;
+    private Button cancelButton, editButton, deleteButton;
     private Word theWord;
 
     private WordLearnerService wordLearnerService;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class DetailsActivity extends AppCompatActivity {
         image = findViewById(R.id.details_photo);
         cancelButton = findViewById(R.id.details_cancel_button);
         editButton = findViewById(R.id.details_edit_button);
+        deleteButton = findViewById(R.id.details_delete_button);
 
         bindService(new Intent(this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
 
@@ -67,6 +70,15 @@ public class DetailsActivity extends AppCompatActivity {
                 startActivityForResult(editIntent, 1);
             }
         });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wordLearnerService.deleteWord(theWord);
+                unbindService(wordLearnerServiceConnection);
+                finish();
+            }
+        });
     }
 
     ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
@@ -82,7 +94,11 @@ public class DetailsActivity extends AppCompatActivity {
             definition.setText(theWord.getDefinition());
             note.setText(theWord.getNote());
             rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
-            image.setImageResource(getResources().getIdentifier(theWord.getWord().toLowerCase(),"drawable", getPackageName()));
+            if (theWord.getImageUrl() != null){
+                Glide.with(image.getContext()).load(theWord.getImageUrl()).into(image);
+            } else {
+                //missing default gif
+            }
         }
 
         @Override
@@ -96,7 +112,6 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
         super.onActivityResult(requestCode, resultCode, intentData);
         if (resultCode == RESULT_OK) {
-            setResult(RESULT_OK, intentData);
             unbindService(wordLearnerServiceConnection);
             finish();
         }

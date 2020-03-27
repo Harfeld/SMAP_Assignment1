@@ -11,7 +11,7 @@ public class DefinitionAPIObject {
     @Expose private String definition;
 
     @SerializedName("example")
-    @Expose private String ecample;
+    @Expose private String example;
 
     @SerializedName("image_url")
     @Expose private String imageURL;
@@ -35,12 +35,12 @@ public class DefinitionAPIObject {
         this.definition = definition;
     }
 
-    public String getEcample() {
-        return ecample;
+    public String getExample() {
+        return example;
     }
 
-    public void setEcample(String ecample) {
-        this.ecample = ecample;
+    public void setExample(String ecample) {
+        this.example = ecample;
     }
 
     public String getImageURL() {

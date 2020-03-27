@@ -7,4 +7,10 @@ public class Constants {
     public static final String LA_LOG = "LIST_ACTIVITY_LOG";
     public static final int WL_RUNNING_NOTIFICATION_ID = 999;
     public static final String WORD_TAG = "WORD_KEY";
+    public static final String UPDATE_BROADCAST_ACTION = "UPDATE.BROADCAST.ACTION";
+    public static final String DELETE_BROADCAST_ACTION = "DELETE.BROADCAST.ACTION";
+    public static final String SEARCH_RESULT_BROADCAST_ACTION = "SEARCH.RESULT.BROADCAST.ACTION";
+    public static final String SEARCH_RESULT_EXTRA = "SEARCH.RESULT.EXTRA";
+    public static final String SEARCH_SUCCESS = "SEARCH.OK";
+    public static final String SEARCH_FAILURE = "SEARCH.ERROR";
 }

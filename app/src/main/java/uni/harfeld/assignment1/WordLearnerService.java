@@ -13,17 +13,24 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +41,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import uni.harfeld.assignment1.Database.WordApplication;
+import uni.harfeld.assignment1.Models.DefinitionAPIObject;
 import uni.harfeld.assignment1.Models.Word;
 import uni.harfeld.assignment1.Models.WordAPIObject;
 
+import static uni.harfeld.assignment1.Constants.DELETE_BROADCAST_ACTION;
+import static uni.harfeld.assignment1.Constants.SEARCH_FAILURE;
+import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_BROADCAST_ACTION;
+import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_EXTRA;
+import static uni.harfeld.assignment1.Constants.SEARCH_SUCCESS;
+import static uni.harfeld.assignment1.Constants.UPDATE_BROADCAST_ACTION;
 import static uni.harfeld.assignment1.Constants.WL_LOG;
 import static uni.harfeld.assignment1.Constants.WL_RUNNING_NOTIFICATION_ID;
 import static uni.harfeld.assignment1.Constants.WORD_API_TOKEN;
@@ -48,6 +62,8 @@ service demos from lecture
 Networking demos from lecture
 https://developer.android.com/reference/java/util/concurrent/ExecutorService
 https://developer.android.com/reference/java/util/concurrent/Executor
+https://androidclarified.com/android-volley-example/
+https://www.youtube.com/watch?v=fASThCXLrCc
 */
 
 public class WordLearnerService extends Service {
@@ -98,27 +114,25 @@ public class WordLearnerService extends Service {
         return START_STICKY;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 
     //Business logic
-    public void addWord(String wordToAdd){
-        final Word newWord = new Word(wordToAdd, null, null, null, null, null, null);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(newWord);
-            }
-        });
+    public void addWord(final String wordToAdd){
+        if (getWord(wordToAdd) != null){
+            Log.d(WL_LOG,wordToAdd + " already exists in database");
+        } else {
+            searchForWordInAPI(wordToAdd);
+        }
     }
 
     public List<Word> getAllWords() {
@@ -156,49 +170,120 @@ public class WordLearnerService extends Service {
             @Override
             public void run() {
                 ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().update(wordToUpdate);
+                broadcastUpdateResult();
             }
         });
     }
 
-    public void deleteWord(Word wordToDelete){
+    public void deleteWord(final Word wordToDelete){
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().delete(wordToDelete);
+                broadcastDeleteResult();
+            }
+        });
     }
 
-    private void searchWordInAPI(String WordToSearch){
+    public List<Word> seedDatabaseFromFile() {
+        List<String> wordsToSeed = getDefaultWordsFromFile();
+        for (final String word : wordsToSeed) {
+            searchForWordInAPI(word);
+        }
+        return getAllWords();
+    }
+
+    //Helper functions
+    private void broadcastSearchResult(String searchResult){
+        Intent searchResultIntent = new Intent();
+        searchResultIntent.setAction(SEARCH_RESULT_BROADCAST_ACTION);
+        searchResultIntent.putExtra(SEARCH_RESULT_EXTRA, searchResult);
+        Log.d(WL_LOG, "BROADCASTING: " + searchResult);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(searchResultIntent);
+    }
+
+    private void broadcastUpdateResult(){
+        Intent updateIntent = new Intent();
+        updateIntent.setAction(UPDATE_BROADCAST_ACTION);
+        Log.d(WL_LOG, "BROADCASTING: Updated word");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(updateIntent);
+    }
+
+    private void broadcastDeleteResult(){
+        Intent deleteIntent = new Intent();
+        deleteIntent.setAction(DELETE_BROADCAST_ACTION);
+        Log.d(WL_LOG, "BROADCASTING: Delete word");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(deleteIntent);
+    }
+
+    private void searchForWordInAPI(String wordToSearch){
         if(requestQueue==null){
             requestQueue = Volley.newRequestQueue(this);
         }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, WORD_API_URL,
-                new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, WORD_API_URL + wordToSearch, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String jsonResponse) {
+                    public void onResponse(JSONObject jsonResponse) {
                         parseJson(jsonResponse);
+                        broadcastSearchResult(SEARCH_SUCCESS);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError requestError) {
                 Log.e(WL_LOG, "JSON Request failed", requestError);
+                broadcastSearchResult(SEARCH_FAILURE);
             }
         }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Content-Type", "application/json");
                 params.put("Authorization", WORD_API_TOKEN);
                 return params;
             }
         };
-
-        requestQueue.add(stringRequest);
+        requestQueue.add(jsonObjectRequest);
     }
 
-    private void parseJson(String json){
+    private void parseJson(JSONObject json){
         Gson gson = new GsonBuilder().create();
-        WordAPIObject testWord = gson.fromJson(json, WordAPIObject.class);
-        broadcastSearchResult();
+        WordAPIObject wordAPIObject = gson.fromJson(json.toString(), WordAPIObject.class);
+        convertAndInsertInDB(wordAPIObject);
     }
 
-    private void broadcastSearchResult(){
+    private void convertAndInsertInDB(WordAPIObject wordAPIObject) {
+        DefinitionAPIObject definitionObject = wordAPIObject.getDefinitions().get(0);
+        definitionObject.setDefinition(definitionObject.getDefinition().substring(0,1).toUpperCase() + definitionObject.getDefinition().substring(1));
+        String[] definition = definitionObject.getDefinition().split("\\. ");
 
+        final Word theWord = new Word(wordAPIObject.getWord(),
+                wordAPIObject.getPronunciation(),
+                (definition.length > 1)? definitionObject.getDefinition().replace(definition[0] + ". ",""): (definition[0] + "."),
+                (definition[0] + "."),
+                null,
+                null,
+                definitionObject.getImageURL()
+        );
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                ((WordApplication) getApplicationContext()).getWordDatabase().WordDao().insertAll(theWord);
+            }
+        });
+    }
+
+    private List<String> getDefaultWordsFromFile(){
+        InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
+        BufferedReader fileReader = new BufferedReader(dataFromFile);
+        List<String> defaultWords = new ArrayList<String>();
+        try {
+            String dataLine;
+            while ((dataLine = fileReader.readLine()) != null){
+                defaultWords.add(dataLine.replace("\uFEFF","").split(";")[0]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return defaultWords;
     }
 }

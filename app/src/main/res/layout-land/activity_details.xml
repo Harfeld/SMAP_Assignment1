@@ -10,76 +10,72 @@
 
     <TextView
         android:id="@+id/details_notes"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/details_definition"
+        app:layout_constraintEnd_toEndOf="@+id/details_description"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/details_definition"
+        app:layout_constraintStart_toStartOf="@+id/details_description"
         app:layout_constraintTop_toBottomOf="@+id/details_notes_titel" />
 
     <TextView
         android:id="@+id/details_description"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/details_definition"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/details_definition"
         app:layout_constraintTop_toBottomOf="@+id/details_description_titel" />
 
     <TextView
         android:id="@+id/details_definition"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_marginLeft="8dp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/details_description"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/details_notes_titel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/details_definition_titel"
         app:layout_constraintTop_toBottomOf="@+id/details_definition_titel" />
 
     <TextView
         android:id="@+id/details_notes_titel"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/notes_txt"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/details_description_titel"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@+id/details_description_titel"
+        app:layout_constraintEnd_toEndOf="@+id/details_definition_titel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/details_definition_titel"
         app:layout_constraintTop_toBottomOf="@+id/details_description" />
 
     <TextView
         android:id="@+id/details_description_titel"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/description_txt"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@+id/details_description"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintEnd_toEndOf="@+id/details_definition_titel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/details_definition_titel"
+        app:layout_constraintTop_toBottomOf="@+id/details_definition" />
 
     <TextView
         android:id="@+id/details_definition_titel"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="@string/definition_txt"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:text="@string/definition_txt"
         android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/details_description_titel"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/details_description_titel"
-        app:layout_constraintTop_toBottomOf="@+id/details_notes" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/details_pronunciation"
@@ -121,7 +117,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/details_titel"
-        app:layout_constraintEnd_toStartOf="@+id/details_description"
+        app:layout_constraintEnd_toStartOf="@+id/details_definition_titel"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
