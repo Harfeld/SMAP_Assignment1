@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uni.harfeld.assignment1">
+    package="uni.au561064.assignment2">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,17 +12,17 @@
         android:roundIcon="@mipmap/assignment1_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".Database.WordApplication">
-        <activity android:name=".EditActivity"></activity>
-        <activity android:name=".DetailsActivity" />
-        <activity android:name=".ListActivity">
+        android:name="uni.au561064.assignment2.Database.WordApplication">
+        <activity android:name="uni.au561064.assignment2.EditActivity"></activity>
+        <activity android:name="uni.au561064.assignment2.DetailsActivity" />
+        <activity android:name="uni.au561064.assignment2.ListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service
-            android:name=".WordLearnerService"
+            android:name="uni.au561064.assignment2.WordLearnerService"
             android:enabled="true"
             android:exported="false" />
 

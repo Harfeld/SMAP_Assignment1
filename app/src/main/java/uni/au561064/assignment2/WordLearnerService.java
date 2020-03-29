@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -36,27 +36,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import uni.harfeld.assignment1.Database.WordApplication;
-import uni.harfeld.assignment1.Models.DefinitionAPIObject;
-import uni.harfeld.assignment1.Models.Word;
-import uni.harfeld.assignment1.Models.WordAPIObject;
+import uni.au561064.assignment2.Database.WordApplication;
+import uni.au561064.assignment2.Models.DefinitionAPIObject;
+import uni.au561064.assignment2.Models.Word;
+import uni.au561064.assignment2.Models.WordAPIObject;
 
-import static uni.harfeld.assignment1.Constants.DELETE_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.SEARCH_FAILURE;
-import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_EXTRA;
-import static uni.harfeld.assignment1.Constants.SEARCH_SUCCESS;
-import static uni.harfeld.assignment1.Constants.UPDATE_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.WL_LOG;
-import static uni.harfeld.assignment1.Constants.WL_REMINDING_NOTIFICATION_ID;
-import static uni.harfeld.assignment1.Constants.WL_RUNNING_NOTIFICATION_ID;
-import static uni.harfeld.assignment1.Constants.WORD_API_TOKEN;
-import static uni.harfeld.assignment1.Constants.WORD_API_URL;
+import static uni.au561064.assignment2.Constants.DELETE_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.SEARCH_FAILURE;
+import static uni.au561064.assignment2.Constants.SEARCH_RESULT_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.SEARCH_RESULT_EXTRA;
+import static uni.au561064.assignment2.Constants.SEARCH_SUCCESS;
+import static uni.au561064.assignment2.Constants.UPDATE_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.WL_LOG;
+import static uni.au561064.assignment2.Constants.WL_REMINDING_NOTIFICATION_ID;
+import static uni.au561064.assignment2.Constants.WL_RUNNING_NOTIFICATION_ID;
+import static uni.au561064.assignment2.Constants.WORD_API_TOKEN;
+import static uni.au561064.assignment2.Constants.WORD_API_URL;
 
 /*
 Heavily inspired by:
@@ -109,39 +110,39 @@ public class WordLearnerService extends Service {
                     .setChannelId("wordLearnerChannel")
                     .build();
             startForeground(WL_RUNNING_NOTIFICATION_ID, wordLearnerNotification);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    Random random = new Random();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        NotificationChannel notificationChannel = new NotificationChannel("wordLearnerReminderChannel", "WordLearnerReminderChannel", NotificationManager.IMPORTANCE_HIGH);
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.createNotificationChannel(notificationChannel);
+                    }
+                    while (running){
+                        try{
+                            List<Word> words = getAllWords();
+                            Word wordToNotify = words.get(random.nextInt(words.size()));
+
+                            Notification wordLearnerNotification = new NotificationCompat.Builder(WordLearnerService.this, "wordLearnerReminderChannel")
+                                    .setContentTitle("Remember to study your favourite words")
+                                    .setContentText("Wordsuggestion of the minute: " + wordToNotify.getWord())
+                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setTicker("Wordsuggestion of the minute: " + wordToNotify.getWord())
+                                    .setChannelId("wordLearnerReminderChannel")
+                                    .build();
+                            startForeground(WL_REMINDING_NOTIFICATION_ID, wordLearnerNotification);
+                            Thread.sleep(60000);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
         } else {
             Log.d(WL_LOG, "WordLearnerService OnStart called - Service Already running");
         }
-
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                Random random = new Random();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    NotificationChannel notificationChannel = new NotificationChannel("wordLearnerReminderChannel", "WordLearnerReminderChannel", NotificationManager.IMPORTANCE_HIGH);
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.createNotificationChannel(notificationChannel);
-                }
-                while (running){
-                    try{
-                        List<Word> words = getAllWords();
-                        Word wordToNotify = words.get(random.nextInt(words.size()));
-
-                        Notification wordLearnerNotification = new NotificationCompat.Builder(WordLearnerService.this, "wordLearnerReminderChannel")
-                                .setContentTitle("Remember to study your favourite words")
-                                .setContentText("Wordsuggestion of the minute: " + wordToNotify.getWord())
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setTicker("Wordsuggestion of the minute: " + wordToNotify.getWord())
-                                .setChannelId("wordLearnerReminderChannel")
-                                .build();
-                        startForeground(WL_REMINDING_NOTIFICATION_ID, wordLearnerNotification);
-                        Thread.sleep(60000);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
         return START_STICKY;
     }
 
@@ -156,8 +157,6 @@ public class WordLearnerService extends Service {
         return binder;
     }
 
-
-    //Business logic
     public void addWord(final String wordToAdd){
         if (getWord(wordToAdd) != null){
             Log.d(WL_LOG,wordToAdd + " already exists in database");
@@ -175,7 +174,7 @@ public class WordLearnerService extends Service {
         });
         try {
             return wordsFuture.get();
-        } catch (ExecutionException | InterruptedException  e ) {
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
             e.printStackTrace();
             return null;
         }
@@ -190,7 +189,7 @@ public class WordLearnerService extends Service {
         });
         try {
             return wordFuture.get();
-        } catch (ExecutionException | InterruptedException  e ) {
+        } catch (ExecutionException | InterruptedException | CancellationException e) {
             e.printStackTrace();
             return null;
         }
@@ -255,6 +254,7 @@ public class WordLearnerService extends Service {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonResponse) {
+                        Log.e(WL_LOG, "JSON Request succeeded");
                         parseJson(jsonResponse);
                         broadcastSearchResult(SEARCH_SUCCESS);
                     }

@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -19,21 +19,19 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import uni.harfeld.assignment1.Models.Word;
+import uni.au561064.assignment2.Models.Word;
 
-import static uni.harfeld.assignment1.Constants.DELETE_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.LA_LOG;
-import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.SEARCH_RESULT_EXTRA;
-import static uni.harfeld.assignment1.Constants.SEARCH_SUCCESS;
-import static uni.harfeld.assignment1.Constants.UPDATE_BROADCAST_ACTION;
-import static uni.harfeld.assignment1.Constants.WL_LOG;
-import static uni.harfeld.assignment1.Constants.WORD_TAG;
+import static uni.au561064.assignment2.Constants.DELETE_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.LA_LOG;
+import static uni.au561064.assignment2.Constants.SEARCH_RESULT_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.SEARCH_RESULT_EXTRA;
+import static uni.au561064.assignment2.Constants.SEARCH_SUCCESS;
+import static uni.au561064.assignment2.Constants.UPDATE_BROADCAST_ACTION;
+import static uni.au561064.assignment2.Constants.WL_LOG;
+import static uni.au561064.assignment2.Constants.WORD_TAG;
 
 /*
 Heavily inspired by:
@@ -76,8 +74,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 unbindService(wordLearnerServiceConnection);
+                unregisterBroadcastReceivers();
+                finish();
             }
         });
 

@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,10 +13,10 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import uni.harfeld.assignment1.Models.Word;
+import uni.au561064.assignment2.Models.Word;
 
-import static uni.harfeld.assignment1.Constants.LA_LOG;
-import static uni.harfeld.assignment1.Constants.WORD_TAG;
+import static uni.au561064.assignment2.Constants.LA_LOG;
+import static uni.au561064.assignment2.Constants.WORD_TAG;
 
 public class EditActivity extends AppCompatActivity {
     private TextView title, note, rating;
@@ -70,7 +70,10 @@ public class EditActivity extends AppCompatActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateWordInDatabase();
+                theWord.setRating((ratingBar.getProgress()/10.0));
+                theWord.setNote(note.getText().toString());
+                wordLearnerService.updateWord(theWord);
+
                 setResult(RESULT_OK);
                 unbindService(wordLearnerServiceConnection);
                 finish();
@@ -97,10 +100,4 @@ public class EditActivity extends AppCompatActivity {
             Log.d(LA_LOG, "WordLearner Service Disconnected");
         }
     };
-
-    private void updateWordInDatabase(){
-        theWord.setRating((ratingBar.getProgress()/10.0));
-        theWord.setNote(note.getText().toString());
-        wordLearnerService.updateWord(theWord);
-    }
 }

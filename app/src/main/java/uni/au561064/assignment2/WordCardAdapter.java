@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import uni.harfeld.assignment1.Models.Word;
+import uni.au561064.assignment2.Models.Word;
 
 /*
 Heavily inspired by:

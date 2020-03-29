@@ -1,9 +1,9 @@
-package uni.harfeld.assignment1.Database;
+package uni.au561064.assignment2.Database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-import uni.harfeld.assignment1.Models.Word;
+import uni.au561064.assignment2.Models.Word;
 
 /*
 Heavily inspired by:

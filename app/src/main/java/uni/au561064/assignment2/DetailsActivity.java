@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,10 +17,10 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.bumptech.glide.Glide;
 
-import uni.harfeld.assignment1.Models.Word;
+import uni.au561064.assignment2.Models.Word;
 
-import static uni.harfeld.assignment1.Constants.LA_LOG;
-import static uni.harfeld.assignment1.Constants.WORD_TAG;
+import static uni.au561064.assignment2.Constants.LA_LOG;
+import static uni.au561064.assignment2.Constants.WORD_TAG;
 
 /*
 Heavily inspired by:

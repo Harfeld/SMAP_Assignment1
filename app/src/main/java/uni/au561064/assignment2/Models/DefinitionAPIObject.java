@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1.Models;
+package uni.au561064.assignment2.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

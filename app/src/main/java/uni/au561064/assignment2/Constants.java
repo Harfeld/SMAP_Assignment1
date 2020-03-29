@@ -1,4 +1,4 @@
-package uni.harfeld.assignment1;
+package uni.au561064.assignment2;
 
 public class Constants {
     public static final String WORD_API_URL = "https://owlbot.info/api/v4/dictionary/";
