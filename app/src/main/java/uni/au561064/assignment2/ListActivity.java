@@ -104,6 +104,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
     }
 
     ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
+        /*
+            Called when service is bound - Will set the data for recycler view
+        */
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
@@ -116,6 +119,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
             wordCardAdapter.notifyDataSetChanged();
         }
 
+        /*
+            called when the service is unbound
+        */
         @Override
         public void onServiceDisconnected(ComponentName name) {
             wordLearnerService = null;
@@ -123,6 +129,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         }
     };
 
+    /*
+        When a card in the recyclerview is clicked
+    */
     @Override
     public void onCardClick(String word) {
         Intent detailsIntent = new Intent(ListActivity.this, DetailsActivity.class);
@@ -136,6 +145,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         registerBroadcastReceivers();
     }
 
+    /*
+        When the activity receives a broadcast from the service
+    */
     private BroadcastReceiver onServiceResultBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -174,6 +186,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         }
     };
 
+    /*
+        For registering to receive the services broadcasts
+    */
     private void registerBroadcastReceivers(){
         Log.d(LA_LOG, "Registering broadcast Receivers");
         IntentFilter resultFilter = new IntentFilter();
@@ -183,6 +198,9 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         LocalBroadcastManager.getInstance(this).registerReceiver(onServiceResultBroadcast, resultFilter);
     }
 
+    /*
+        For unregistering from receiving the services broadcasts
+    */
     private void unregisterBroadcastReceivers(){
         Log.d(LA_LOG, "Unregistering broadcast Receivers");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onServiceResultBroadcast);

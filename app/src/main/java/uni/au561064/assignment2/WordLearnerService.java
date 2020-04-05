@@ -92,6 +92,12 @@ public class WordLearnerService extends Service {
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
+    /*
+        if the service is not started already:
+            Starts the Service as a foreground service which will run in the background and send word-notifications every 60 seconds.
+        if service is already running
+            Logs that the service is called, but already running.
+    */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!running && intent != null) {
@@ -151,6 +157,9 @@ public class WordLearnerService extends Service {
         super.onDestroy();
     }
 
+    /*
+        When an activity binds to the service.
+    */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -165,6 +174,9 @@ public class WordLearnerService extends Service {
         }
     }
 
+    /*
+        Asynchronously gets all words from the database
+    */
     public List<Word> getAllWords() {
         Future<List<Word>> wordsFuture = executorService.submit(new Callable<List<Word>>() {
             @Override
@@ -180,6 +192,9 @@ public class WordLearnerService extends Service {
         }
     }
 
+    /*
+        Asynchronously gets a word from the database
+    */
     public Word getWord(final String wordToGet){
         Future<Word> wordFuture = executorService.submit(new Callable<Word>() {
             @Override
@@ -195,6 +210,9 @@ public class WordLearnerService extends Service {
         }
     }
 
+    /*
+        Asynchronously updates a word from the database
+    */
     public void updateWord(final Word wordToUpdate){
         executorService.submit(new Runnable() {
             @Override
@@ -205,6 +223,9 @@ public class WordLearnerService extends Service {
         });
     }
 
+    /*
+        Asynchronously delete a word in the database
+    */
     public void deleteWord(final Word wordToDelete){
         executorService.submit(new Runnable() {
             @Override
@@ -215,6 +236,9 @@ public class WordLearnerService extends Service {
         });
     }
 
+    /*
+        Inserts a list of default words into the database
+    */
     public List<Word> seedDatabaseFromFile() {
         List<String> wordsToSeed = getDefaultWordsFromFile();
         for (final String word : wordsToSeed) {
@@ -223,7 +247,9 @@ public class WordLearnerService extends Service {
         return getAllWords();
     }
 
-    //Helper functions
+    /*
+        Broadcasts result of searching a word in the online API
+    */
     private void broadcastSearchResult(String searchResult){
         Intent searchResultIntent = new Intent();
         searchResultIntent.setAction(SEARCH_RESULT_BROADCAST_ACTION);
@@ -232,6 +258,9 @@ public class WordLearnerService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(searchResultIntent);
     }
 
+    /*
+        Broadcasts that word in database has been updated
+    */
     private void broadcastUpdateResult(){
         Intent updateIntent = new Intent();
         updateIntent.setAction(UPDATE_BROADCAST_ACTION);
@@ -239,6 +268,9 @@ public class WordLearnerService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(updateIntent);
     }
 
+    /*
+        Broadcasts that word in database has been deleted
+    */
     private void broadcastDeleteResult(){
         Intent deleteIntent = new Intent();
         deleteIntent.setAction(DELETE_BROADCAST_ACTION);
@@ -276,12 +308,18 @@ public class WordLearnerService extends Service {
         requestQueue.add(jsonObjectRequest);
     }
 
+    /*
+        Converts Json object to WordAPIObject
+    */
     private void parseJson(JSONObject json){
         Gson gson = new GsonBuilder().create();
         WordAPIObject wordAPIObject = gson.fromJson(json.toString(), WordAPIObject.class);
         convertAndInsertInDB(wordAPIObject);
     }
 
+    /*
+        Converts WordAPIObject to Word and inserts the word into the database.
+    */
     private void convertAndInsertInDB(WordAPIObject wordAPIObject) {
         DefinitionAPIObject definitionObject = wordAPIObject.getDefinitions().get(0);
         definitionObject.setDefinition(definitionObject.getDefinition().substring(0,1).toUpperCase() + definitionObject.getDefinition().substring(1));
@@ -303,6 +341,9 @@ public class WordLearnerService extends Service {
         });
     }
 
+    /*
+        Returns a list of default words defined for the app
+    */
     private List<String> getDefaultWordsFromFile(){
         InputStreamReader dataFromFile = new InputStreamReader(getResources().openRawResource(R.raw.animal_list));
         BufferedReader fileReader = new BufferedReader(dataFromFile);

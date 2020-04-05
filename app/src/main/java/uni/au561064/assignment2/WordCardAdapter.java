@@ -51,6 +51,9 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
             this.onCardClickListener = onCardClickListener;
             context = cardView.getContext();
 
+            /*
+                Onclick listener that calls the onClick implemented in the listActivity
+            */
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View card) {
@@ -82,6 +85,9 @@ public class WordCardAdapter extends RecyclerView.Adapter<WordCardAdapter.WordCa
         return data.size();
     }
 
+    /*
+        Interface to let the List activity implement an onclick function for when the card is clicked
+    */
     public interface OnCardClickListener{
         void onCardClick(String word);
     }

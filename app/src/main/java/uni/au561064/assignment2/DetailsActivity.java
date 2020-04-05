@@ -82,6 +82,9 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     ServiceConnection wordLearnerServiceConnection = new ServiceConnection() {
+        /*
+            Called when service is bound - Will set the data of the views
+        */
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
@@ -97,6 +100,9 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(image.getContext()).load(theWord.getImageUrl()).placeholder(R.drawable.howboutno).into(image);
         }
 
+        /*
+            called when the service is unbound
+        */
         @Override
         public void onServiceDisconnected(ComponentName name) {
             wordLearnerService = null;

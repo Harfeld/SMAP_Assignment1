@@ -1,5 +1,8 @@
 package uni.au561064.assignment2;
 
+    /*
+        Constants used in the app
+    */
 public class Constants {
     public static final String WORD_API_URL = "https://owlbot.info/api/v4/dictionary/";
     public static final String WORD_API_TOKEN = "Token 6ecbe95a3035d09f5e251935e889df09a057fbeb";
@@ -14,4 +17,6 @@ public class Constants {
     public static final String SEARCH_RESULT_EXTRA = "SEARCH.RESULT.EXTRA";
     public static final String SEARCH_SUCCESS = "SEARCH.OK";
     public static final String SEARCH_FAILURE = "SEARCH.ERROR";
+    public static final String SAVED_NOTE = "SAVED.NOTE";
+    public static final String SAVED_RATING = "SAVED.RATING";
 }
