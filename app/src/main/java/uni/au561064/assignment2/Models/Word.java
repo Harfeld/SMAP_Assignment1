@@ -1,5 +1,8 @@
 package uni.au561064.assignment2.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -10,7 +13,7 @@ https://www.youtube.com/watch?v=WBbsvqSu0is&t=263s
 */
 
 @Entity
-public class Word {
+public class Word implements Parcelable {
     @PrimaryKey
     @NonNull String word;
 
@@ -30,6 +33,28 @@ public class Word {
         this.note = (note == null || note.isEmpty()) ? "No notes" : note;
         this.imageUrl = (imageUrl == null || imageUrl.isEmpty()) ? "N/A" : imageUrl;
     }
+
+    protected Word(Parcel in) {
+        word = in.readString();
+        pronunciation = in.readString();
+        details = in.readString();
+        definition = in.readString();
+        rating = in.readDouble();
+        note = in.readString();
+        imageUrl = in.readString();
+    }
+
+    public static final Creator<Word> CREATOR = new Creator<Word>() {
+        @Override
+        public Word createFromParcel(Parcel in) {
+            return new Word(in);
+        }
+
+        @Override
+        public Word[] newArray(int size) {
+            return new Word[size];
+        }
+    };
 
     public String getImageUrl() {
         return imageUrl;
@@ -85,5 +110,21 @@ public class Word {
 
     public void setDefinition(String definition) {
         this.definition = definition;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(word);
+        dest.writeString(pronunciation);
+        dest.writeString(details);
+        dest.writeString(definition);
+        dest.writeDouble(rating);
+        dest.writeString(note);
+        dest.writeString(imageUrl);
     }
 }

@@ -57,7 +57,6 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED, getIntent());
-                unbindService(wordLearnerServiceConnection);
                 finish();
             }
         });
@@ -75,7 +74,6 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 wordLearnerService.deleteWord(theWord);
-                unbindService(wordLearnerServiceConnection);
                 finish();
             }
         });
@@ -111,10 +109,15 @@ public class DetailsActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onDestroy() {
+        unbindService(wordLearnerServiceConnection);
+        super.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intentData) {
         super.onActivityResult(requestCode, resultCode, intentData);
         if (resultCode == RESULT_OK) {
-            unbindService(wordLearnerServiceConnection);
             finish();
         }
     }

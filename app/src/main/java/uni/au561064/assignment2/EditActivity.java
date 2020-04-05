@@ -16,8 +16,7 @@ import android.widget.TextView;
 import uni.au561064.assignment2.Models.Word;
 
 import static uni.au561064.assignment2.Constants.LA_LOG;
-import static uni.au561064.assignment2.Constants.SAVED_NOTE;
-import static uni.au561064.assignment2.Constants.SAVED_RATING;
+import static uni.au561064.assignment2.Constants.SAVED_WORD;
 import static uni.au561064.assignment2.Constants.WORD_TAG;
 
 public class EditActivity extends AppCompatActivity {
@@ -63,7 +62,6 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED, getIntent());
-                unbindService(wordLearnerServiceConnection);
                 finish();
             }
         });
@@ -76,7 +74,6 @@ public class EditActivity extends AppCompatActivity {
                 wordLearnerService.updateWord(theWord);
 
                 setResult(RESULT_OK);
-                unbindService(wordLearnerServiceConnection);
                 finish();
             }
         });
@@ -90,14 +87,16 @@ public class EditActivity extends AppCompatActivity {
                 wordLearnerService = ((WordLearnerService.WordLearnerServiceBinder) service).getService();
                 Log.d(LA_LOG, "WordLearner Service Connected");
 
-                theWord = wordLearnerService.getWord(getIntent().getStringExtra(WORD_TAG));
-                double blib = (savedInstanceState != null) ? savedInstanceState.getDouble(SAVED_RATING): theWord.getRating();
-                String blob = (savedInstanceState != null) ? savedInstanceState.getString(SAVED_NOTE, theWord.getNote()): theWord.getNote();
+                if (savedInstanceState != null){
+                    theWord = savedInstanceState.getParcelable(SAVED_WORD);
+                } else {
+                    theWord = wordLearnerService.getWord(getIntent().getStringExtra(WORD_TAG));
+                }
 
                 title.setText(theWord.getWord());
-                note.setText(blob);
-                rating.setText(((blib == 10.0) ? String.valueOf((int)blib) : String.valueOf(blib)));
-                ratingBar.setProgress(((int)(blib*10)));
+                note.setText(theWord.getNote());
+                rating.setText(((theWord.getRating() == 10.0) ? String.valueOf((int)theWord.getRating()) : String.valueOf(theWord.getRating())));
+                ratingBar.setProgress(((int)(theWord.getRating()*10)));
             }
 
             /*
@@ -110,6 +109,7 @@ public class EditActivity extends AppCompatActivity {
             }
         };
         bindService(new Intent(EditActivity.this, WordLearnerService.class), wordLearnerServiceConnection, BIND_AUTO_CREATE);
+
     }
 
     @Override
@@ -120,8 +120,9 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putDouble(SAVED_RATING, (ratingBar.getProgress()/10.0));
-        outState.putString(SAVED_NOTE, note.getText().toString());
+        theWord.setRating((ratingBar.getProgress()/10.0));
+        theWord.setNote(note.getText().toString());
+        outState.putParcelable(SAVED_WORD, theWord);
         super.onSaveInstanceState(outState);
     }
 }

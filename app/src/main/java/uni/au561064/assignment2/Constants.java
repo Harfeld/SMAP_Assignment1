@@ -19,4 +19,5 @@ public class Constants {
     public static final String SEARCH_FAILURE = "SEARCH.ERROR";
     public static final String SAVED_NOTE = "SAVED.NOTE";
     public static final String SAVED_RATING = "SAVED.RATING";
+    public static final String SAVED_WORD = "SAVED.WORD";
 }

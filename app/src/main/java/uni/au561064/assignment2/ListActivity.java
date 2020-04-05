@@ -74,7 +74,6 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unbindService(wordLearnerServiceConnection);
                 unregisterBroadcastReceivers();
                 finish();
             }
@@ -145,9 +144,15 @@ public class ListActivity extends AppCompatActivity implements WordCardAdapter.O
         registerBroadcastReceivers();
     }
 
+    @Override
+    protected void onDestroy() {
+        unbindService(wordLearnerServiceConnection);
+        super.onDestroy();
+    }
+
     /*
-        When the activity receives a broadcast from the service
-    */
+            When the activity receives a broadcast from the service
+        */
     private BroadcastReceiver onServiceResultBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
